@@ -1,4 +1,6 @@
 # TRACE — Tactical Reconnaissance & Analysis of Coastal Environments
+<img width="1888" height="908" alt="image_2026-02-28_00-50-34" src="https://github.com/user-attachments/assets/9b4ac515-f563-490a-a7d6-ee03d9f0b014" />
+<img width="1873" height="904" alt="image_2026-02-28_00-53-21" src="https://github.com/user-attachments/assets/aa75b468-d921-414e-ab08-3aa4d7187489" />
 
 > AI-powered satellite intelligence platform for autonomous maritime vessel detection and environmental oil spill monitoring.
 
@@ -71,7 +73,9 @@ uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
 **4. Open UI**
 
 Navigate to → **http://localhost:8000**
-
+### 🧠 AI Models
+To run TRACE locally, download the pre-trained weights from our [Latest Release](https://github.com/sronters/TRACE-Satellite-AI/releases/tag/v1.0.0). 
+Place `best.pt` and `best_unet_sos.pth` inside the `/models` directory.
 ---
 
 ## Analysis Modes
@@ -113,3 +117,4 @@ The `notebooks/` folder contains the original training notebooks:
 - **Coast guard** — ghost vessel (AIS-dark) detection
 - **Insurance companies** — accident and damage assessment
 - **Logistics operators** — port congestion analysis
+
