@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+ultralytics
+torch
+torchvision
+Pillow
+numpy
+requests
+opencv-python-headless
+segmentation-models-pytorch
+huggingface_hub

@@ -1,0 +1,12 @@
+__pycache__/
+.env
+*.py[cod]
+.ipynb_checkpoints/
+*.log
+models/*.pt
+models/*.pth
+dist/
+build/
+.venv/
+venv/
+node_modules/
