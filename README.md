@@ -1,242 +1,219 @@
-# TRACE v2.0 — Tactical Reconnaissance & Analysis of Coastal Environments
+# TRACE
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.110-green) ![YOLOv8](https://img.shields.io/badge/YOLOv8-OBB-red) ![License](https://img.shields.io/badge/License-MIT-yellow)
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=700&size=24&pause=1000&color=2ED3A2&center=true&vCenter=true&width=900&lines=TRACE+%E2%80%94+Maritime+Intelligence+Platform;AIS+Correlation+%2B+Temporal+Forecasting+%2B+Risk+Scoring;FastAPI+%2B+CV+%2B+OSINT+%2B+Local%2FCloud+LLM" alt="TRACE animated banner" />
+</p>
 
-> **AI-powered satellite intelligence platform** for autonomous maritime vessel detection, environmental oil spill monitoring, and dynamic tactical analysis — fully self-hostable, open-source, and multi-modal.
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white">
+  <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.110-009688?logo=fastapi&logoColor=white">
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white">
+  <img alt="Prometheus" src="https://img.shields.io/badge/Prometheus-Enabled-E6522C?logo=prometheus&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-FCC624">
+</p>
+
+<p align="center">
+  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXl5bGw5eXk2NzdmM2VvNTRld2V3NGE4M2YwbWQ5d3VrbjNwY2M1NyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o7TKtnuHOHHUjR38Y/giphy.gif" width="780" alt="Satellite map animation" />
+</p>
+
+Production-grade maritime intelligence API for vessel detection, AIS identity correlation, oil-spill analysis, temporal forecasting, and explainable risk scoring.
 
 ---
 
-## 🌊 What is TRACE?
+## Why TRACE
 
-TRACE transforms raw satellite imagery (or a set of GPS coordinates) into a **complete maritime intelligence briefing in seconds** — combining computer vision, SAR segmentation, real-time OSINT, and a vision-language model into a single unified pipeline.
+- CV + OSINT + AIS fused into one operational decision stream
+- Local-first architecture with optional cloud fallback
+- Stateful tracking and trajectory prediction across frames
+- Contract-driven ML runtime for safe model upgrades
+- Scalable persistence path from SQLite to PostGIS + TimescaleDB
 
-Unlike enterprise solutions (Windward, Orbital Insight) that cost $100k+/year and require your data to leave your infrastructure, **TRACE runs entirely on-premise** — critical for coast guards, navies, and government agencies with data sovereignty requirements.
+---
 
+## Feature Highlights
+
+- YOLO vessel detection and SAR spill segmentation
+- MarineTraffic/AISHub/static AIS provider failover
+- AIS-silent vessel flagging and fleet enrichment
+- Kalman tracking and temporal movement projection
+- Drift forecast for oil spills using wind/current signals
+- Change/anomaly detection against AOI history
+- Hybrid risk engine (rule-based + optional XGBoost)
+- SSE streaming endpoint for real-time pipeline progress
+- API key security, optional mTLS gate, audit logging
+- Prometheus metrics and health/contract diagnostics
+
+---
+
+## Architecture
+
+```mermaid
+graph TD
+    A[Client] --> B[FastAPI API]
+    B --> C[Pipeline Orchestrator]
+
+    C --> D[Tile Ingestion]
+    C --> E[Vision Inference]
+    C --> F[OSINT Enrichment]
+    C --> G[AIS Provider Layer]
+    C --> H[Tracking + Temporal]
+    C --> I[Risk Engine + ML]
+    C --> J[LLM Report]
+    C --> K[Persistence]
+
+    G --> G1[MarineTraffic]
+    G --> G2[AISHub]
+    G --> G3[Static Cache]
+
+    K --> K1[SQLite]
+    K --> K2[PostgreSQL + PostGIS + TimescaleDB]
 ```
-Input: GPS Coordinates or Satellite Image
-  ↓
-Output: Vessel detections + GPS tags + Oil spill polygon + Risk Score (0–100) + LLM Tactical Report
-```
 
 ---
 
-## 🤖 AI Models
+## Project Layout
 
-| Model | Task | Architecture | Dataset |
-|---|---|---|---|
-| **YOLOv8-OBB** | Vessel detection & orientation | YOLOv8s Oriented Bounding Box | DOTAv1.5 (16 classes) |
-| **U-Net (ResNet34)** | Oil spill segmentation | PyTorch segmentation_models_pytorch | SOS dataset |
-| **Qwen 2.5-VL-72B** | Tactical intelligence report generation | Vision-Language Model | HuggingFace Serverless API |
-
-### Model Performance
-
-| Model | Metric | Score |
-|---|---|---|
-| YOLOv8-OBB | mAP50 (ship class, DOTAv1.5 test set) | ~0.73 |
-| U-Net ResNet34 | IoU (SOS dataset) | ~0.68 |
-| U-Net ResNet34 | Dice Score (SOS dataset) | ~0.71 |
-
-### Why These Models?
-
-- **YOLOv8-OBB**: The only YOLO variant with oriented bounding boxes — essential for oblique satellite viewing angles where axis-aligned boxes fail. Corrects for heading/orientation automatically.
-- **U-Net + ResNet34**: SAR imagery is inherently noisy (backscatter). U-Net's encoder-decoder skip connections preserve spatial detail; ResNet34 encoder (ImageNet pretrained) provides robust feature extraction. Custom `0.5 × BCE + 0.5 × Dice` loss handles severe class imbalance (spills < 5% of pixels).
-- **Qwen 2.5-VL-72B**: Top open-weight vision-language model. No vendor lock-in, no per-token OpenAI pricing at scale. Hallucination risk is controlled via **deterministic prompt injection** — the model receives structured detector outputs and can only reason within the provided context.
-
----
-
-## 🎯 Key Features
-
-- **Multi-Modal Fusion Pipeline** — Parallel execution of optical vessel detection (YOLO) + SAR oil spill segmentation (U-Net) + weather/news OSINT, all synthesized into one risk score
-- **Zero-Prep Auto-Routing** — Input GPS coordinates and TRACE automatically fetches and stitches satellite map tiles — no pre-downloaded imagery needed
-- **Risk Engine (0–100 Score)** — Multi-factor scoring: vessel density + weather multiplier (wind > 30 km/h) + pollution penalty (+40 for any spill) + geopolitical news sentiment overlay
-- **On-Premise Deployable** — Self-hosted with no external data dependency beyond open APIs (ESA Sentinel, Open-Meteo)
-- **Live Fleet Registry** — Cross-reference detected vessels against registered friendly fleet database to flag unidentified tracks
-- **LLM Tactical Reports** — Qwen synthesizes all signals into a military-grade written briefing with correlation analysis
-- **Interactive Dashboard** — Leaflet.js map with bounding box overlays, segmentation polygons, and real-time alert feed
-
----
-
-## 📂 Project Structure
-
-```
+```text
 TRACEEE/
-├── src/
-│   ├── app.py             # Main FastAPI backend & inference orchestration
-│   ├── index.html         # Cyberpunk-styled interactive dashboard frontend
-│   ├── intelligence.py    # OSINT gathering (Weather, News NLP, Sentinel Hub)
-│   ├── risk_engine.py     # Multi-factor risk calculation & Qwen context builder
-│   ├── database.py        # SQLite history, alerts, and analysis state management
-│   └── fleet.py           # Fleet registry & port management
-├── models/
-│   ├── best.pt            # YOLOv8s-OBB weights (DOTAv1.5, 16 classes)
-│   └── best_unet_sos.pth  # U-Net weights (SOS dataset, BCE+Dice loss)
-├── notebooks/
-│   ├── yolo8n-dota.ipynb        # YOLO training notebook
-│   └── oilspill-segmentation.py # U-Net training pipeline
 ├── docs/
-│   ├── TECHNICAL_DETAILS.md     # Deep-dive architecture & AI documentation
-│   └── TRACE_PitchDeck.pdf      # Executive pitch presentation
-├── trace.db               # SQLite database (auto-generated on first run)
+│   ├── API_REFERENCE.md
+│   ├── OPERATIONS.md
+│   ├── TECHNICAL_DETAILS.md
+│   ├── TRAINING_DATA_GUIDE.md
+│   └── V3_UPGRADE.md
+├── models/
+│   ├── risk_features.json
+│   ├── risk_model_meta.json
+│   ├── best.pt
+│   └── best_unet_sos.pth
+├── src/
+│   ├── app.py
+│   ├── main.py
+│   ├── core/
+│   │   ├── config.py
+│   │   └── http_middleware.py
+│   ├── services/
+│   │   ├── llm_service.py
+│   │   ├── pipeline_service.py
+│   │   ├── tile_service.py
+│   │   └── vision_service.py
+│   ├── ml/
+│   │   ├── __init__.py
+│   │   ├── artifact_validator.py
+│   │   └── feature_contract.py
+│   ├── ais.py
+│   ├── intelligence.py
+│   ├── tracker.py
+│   ├── temporal.py
+│   ├── change_detection.py
+│   ├── risk_engine.py
+│   ├── ml_risk.py
+│   ├── database.py
+│   ├── fleet.py
+│   ├── segmentation.py
+│   └── index.html
 ├── requirements.txt
-├── .env.example           # Environment variable template
-└── .env                   # Your local config (never commit this)
+└── .env.example
 ```
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
-### Prerequisites
-- Python 3.10+
-- ~4GB disk space for model weights
-- A free HuggingFace account for Qwen reports
+### 1) Install
 
-### 1. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Configure environment
+### 2) Configure
+
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your keys:
+Set at minimum:
 
 ```env
-# Required — enables Qwen 2.5-VL tactical report generation
-HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxx          # → huggingface.co/settings/tokens (free)
-
-# Optional — enables geopolitical news sentiment analysis
-NEWS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxx     # → newsapi.org (free tier: 100 req/day)
-
-# No key needed — open APIs used automatically:
-# Open-Meteo (weather), OSM tiles (map auto-download)
+TRACE_LLM_PROVIDER=auto
+OLLAMA_URL=http://127.0.0.1:11434
+OLLAMA_MODEL=qwen2.5:7b-instruct
 ```
 
-### 3. Place model weights
-```
-models/best.pt             # YOLOv8-OBB weights
-models/best_unet_sos.pth   # U-Net weights
+Optional:
+
+```env
+HF_TOKEN=
+TRACE_API_KEYS=
+TRACE_REQUIRE_MTLS=false
+TRACE_POSTGRES_DSN=
+MARINETRAFFIC_API_KEY=
+MARINETRAFFIC_API_URL=
+RISK_MODEL_PATH=models/risk_xgb.json
+RISK_FEATURES_PATH=models/risk_features.json
+RISK_MODEL_META_PATH=models/risk_model_meta.json
 ```
 
-### 4. Start the backend
+### 3) Run
+
 ```bash
-uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### 5. Open the dashboard
-```
-http://localhost:8000
-```
+Open:
+- API: `http://localhost:8000`
+- Health: `http://localhost:8000/health`
+- Metrics: `http://localhost:8000/metrics`
 
 ---
 
-## 📡 API Reference
+## API Snapshot
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/` | Interactive dashboard UI |
-| `GET` | `/health` | System diagnostics & loaded model status |
-| `POST` | `/process` | **Core pipeline** — accepts image file upload OR `lat`/`lon` params for auto-download |
-| `GET` | `/api/history` | Past analysis sessions from SQLite |
-| `GET` | `/api/alerts` | Active threat alerts (Risk Score > 75) |
-| `GET` | `/api/intel` | Quick OSINT snapshot (weather + news) for a coordinate |
-| `GET` | `/api/fleet` | Registered fleet database |
-| `GET` | `/api/route` | Maritime route calculation (land-avoidance) |
+- `POST /process` full synchronous analysis
+- `POST /process/stream` SSE stage-by-stage stream
+- `GET /api/ml/contract` ML artifact contract status
+- `GET /api/history` recent runs
+- `GET /api/tracks` active temporal tracks
+- `GET /api/intel` OSINT snapshot
+- `GET /api/fleet`, `GET /api/ports` fleet registry
 
-### Example: Process by coordinates
-```bash
-curl -X POST "http://localhost:8000/process" \
-  -F "lat=37.9" \
-  -F "lon=23.7"
-```
-
-### Example: Process by image upload
-```bash
-curl -X POST "http://localhost:8000/process" \
-  -F "file=@/path/to/satellite_image.jpg"
-```
+See full reference in `docs/API_REFERENCE.md`.
 
 ---
 
-## 🗺️ System Architecture
+## ML Integration Contract
 
-```
-Client Request (/process)
-        │
-        ├──[Coordinates]──► Download & Stitch Map Tiles ─┐
-        │                                                  ▼
-        └──[Image Upload]─────────────────────► Image Preprocessing
-                                                          │
-                        ┌─────────────────────────────────┤
-                        ▼                                 ▼
-              YOLOv8-OBB Detection           U-Net SAR Segmentation
-              (vessel GPS + heading)         (oil spill polygon)
-                        │                                 │
-                        └──────────────┬──────────────────┘
-                                       ▼
-                         OSINT Layer (parallel):
-                         ├─ Open-Meteo Weather API
-                         └─ News NLP Sentiment (TextBlob)
-                                       │
-                                       ▼
-                              Risk Engine (0–100)
-                                       │
-                                       ▼
-                     Qwen 2.5-VL-72B Tactical Report
-                                       │
-                                       ▼
-                          SQLite (trace.db) → JSON Response
-```
+TRACE expects:
+- `models/risk_xgb.json`
+- `models/risk_features.json`
+- `models/risk_model_meta.json`
+
+Validation endpoints:
+- `GET /api/ml/contract`
+- `GET /health` (`ml_contract` section)
+
+This guarantees feature ordering and safe runtime behavior before loading your trained weights.
 
 ---
 
-## 🗄️ Data Persistence & Production Path
+## Documentation Index
 
-**Current (MVP):** SQLite — zero-config, file-based, suitable for local deployment and demos.
-
-**Production roadmap:**
-```
-SQLite (MVP) → PostgreSQL + PostGIS (geospatial queries at scale) → TimescaleDB (time-series vessel tracking)
-```
-
-Database schema:
-- `analysis_history` — full JSON blobs of each pipeline run (detections, OSINT, Qwen report)
-- `alerts` — high-priority alerts triggered by Risk Engine (Risk > 75 → "Critical Incident")
-- `fleet` / `ports` — known vessel registries for anomaly cross-referencing
+- Technical architecture: `docs/TECHNICAL_DETAILS.md`
+- API specification: `docs/API_REFERENCE.md`
+- Deployment and operations: `docs/OPERATIONS.md`
+- Training data and labeling: `docs/TRAINING_DATA_GUIDE.md`
+- Upgrade notes: `docs/V3_UPGRADE.md`
 
 ---
 
-## 🌍 Target Use Cases
+## Deployment Modes
 
-| Sector | Application |
-|---|---|
-| Coast Guard / Navy | Autonomous patrol coverage, unidentified vessel flagging |
-| Maritime Insurance | Real-time risk scoring for vessel underwriting |
-| Environmental Agencies | Rapid oil spill detection and drift vector calculation |
-| Port Authorities | Predictive threat assessment for incoming traffic |
+- Local demo: SQLite + local LLM
+- Hybrid: SQLite + external AIS/OSINT + HF fallback
+- Production: PostgreSQL/PostGIS/Timescale dual-write + secured API + monitoring
 
 ---
 
-## 🛣️ Roadmap
+## License
 
-- [x] YOLOv8-OBB vessel detection with GPS tagging
-- [x] U-Net SAR oil spill segmentation
-- [x] Multi-factor Risk Engine
-- [x] Qwen 2.5-VL tactical report generation
-- [x] Real-time weather + news OSINT
-- [ ] Real-time Sentinel Hub streaming integration
-- [ ] AIS transponder anomaly correlation
-- [ ] Predictive drift vector modeling for oil spills
-- [ ] PostgreSQL + PostGIS migration for production scale
-- [ ] Multi-region deployment with load balancing
-
----
-
-## 📚 Documentation
-
-- [`docs/TECHNICAL_DETAILS.md`](docs/TECHNICAL_DETAILS.md) — Deep-dive: model architectures, training hyperparameters, loss functions, OSINT pipeline
-- [`docs/TRACE_PitchDeck.pdf`](docs/TRACE_PitchDeck.pdf) — Executive pitch presentation
-
----
+MIT
