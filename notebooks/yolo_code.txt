@@ -1,0 +1,152 @@
+=== CELL 0 ===
+!pip install ultralytics -q
+
+=== CELL 1 ===
+import os
+import shutil
+from ultralytics import YOLO
+
+if not os.path.exists('DOTAv1.5.zip'):
+    print(" Downloading...")
+    !wget https://github.com/ultralytics/assets/releases/download/v0.0.0/DOTAv1.5.zip
+    !unzip -q DOTAv1.5.zip
+    print("ok")
+
+current_dir = os.getcwd()
+potential_path = os.path.join(current_dir, 'DOTAv1.5')
+
+if not os.path.exists(os.path.join(potential_path, 'images')):
+    for root, dirs, files in os.walk(current_dir):
+        if 'images' in dirs and 'labels' in dirs:
+            potential_path = root
+            break
+
+dataset_path = potential_path
+print(f" Path: {dataset_path}")
+
+for split in ['train', 'val']:
+    img_path = os.path.join(dataset_path, 'images', split)
+    if not os.path.exists(img_path):
+        print(f" Error {img_path} not found!")
+    else:
+        print(f"  {split} found.")
+
+=== CELL 2 ===
+import yaml
+
+data_config = {
+    'path': dataset_path,     
+    'train': 'images/train',   
+    'val': 'images/val',        
+    'test': 'images/test',      
+    'names': {
+        0: 'plane', 1: 'ship', 2: 'storage tank', 3: 'baseball diamond',
+        4: 'tennis court', 5: 'basketball court', 6: 'ground track field',
+        7: 'harbor', 8: 'bridge', 9: 'large vehicle', 10: 'small vehicle',
+        11: 'helicopter', 12: 'roundabout', 13: 'soccer ball field',
+        14: 'swimming pool', 15: 'container crane'
+    }
+}
+
+with open('dota_v15_fixed.yaml', 'w') as f:
+    yaml.dump(data_config, f)
+
+print(" YAML created.")
+
+=== CELL 3 ===
+model = YOLO("yolov8s-obb.pt") 
+
+model.train(
+    data="dota_v15_fixed.yaml",
+    epochs=100,
+    imgsz=1024,          
+    batch=8,             
+    device=0,           
+    
+    optimizer='AdamW',   
+    lr0=0.001,           
+    cos_lr=True,         
+    
+    degrees=180.0,       
+    fliplr=0.5,          
+    flipud=0.5,
+    mosaic=1.0,          
+    mixup=0.1,           
+    
+    patience=25,          
+    amp=True,             
+    workers=4,           
+    project="DOTA_Results",
+    name="v8s_dota_best",
+    save=True,
+    cache=True            
+)
+
+metrics = model.val()
+print(" (mAP):", metrics.box.map)
+
+=== CELL 4 ===
+from ultralytics import YOLO
+
+model = YOLO('/kaggle/working/runs/obb/DOTA_Results/v8s_dota_best2/weights/last.pt')
+
+model.train(resume=True)
+
+=== CELL 5 ===
+from ultralytics import YOLO
+
+model = YOLO('/kaggle/working/runs/obb/DOTA_Results/v8s_dota_best2/weights/last.pt')
+
+model.train(resume=True, batch=4) 
+
+=== CELL 6 ===
+from ultralytics import YOLO
+
+model = YOLO('/kaggle/working/runs/obb/DOTA_Results/v8s_dota_best2/weights/best.pt')
+
+metrics = model.val(data='dota_v15_fixed.yaml', imgsz=1024, split='val')
+
+print(f" mAP50: {metrics.map50:.3f}")
+print(f" mAP50-95: {metrics.map:.3f}")
+
+for i, name in enumerate(metrics.names.values()):
+    print(f"CLass {name}: mAP50 = {metrics.map50s[i]:.3f}")
+
+=== CELL 7 ===
+output_dir = '/kaggle/working/inference_results'
+os.makedirs(output_dir, exist_ok=True)
+
+results = model.predict(
+    source='/kaggle/working/DOTAv1.5/images/val', 
+    conf=0.25, 
+    imgsz=1024, 
+    save=True,           
+    project='Inference', 
+    name='v8s_check',
+    max_det=100          
+)
+
+print(f": /kaggle/working/Inference/v8s_check")
+
+=== CELL 8 ===
+import os
+import zipfile
+
+target_files = ['best.pt', 'last.pt', 'results.csv']
+found_paths = []
+
+for root, dirs, files in os.walk('/kaggle/working'):
+    for file in files:
+        if file in target_files:
+            found_paths.append(os.path.join(root, file))
+
+zip_name = 'dota_model_weights.zip'
+if found_paths:
+    with zipfile.ZipFile(zip_name, 'w') as zipf:
+        for file_path in found_paths:
+          
+            zipf.write(file_path, arcname=os.path.basename(file_path))
+    print(f"✅: {os.path.abspath(zip_name)}")
+    print(f"Size: {os.path.getsize(zip_name) / (1024*1024):.2f} MB")
+else:
+    print("❌")
