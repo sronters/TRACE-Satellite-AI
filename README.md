@@ -55,7 +55,7 @@ Output: Vessel detections + GPS tags + Oil spill polygon + Risk Score (0–100) 
 ---
 
 ## 📂 Project Structure
-[4/6/2026 7:24 PM] ML/DL: TRACEEE/
+ TRACEEE/
 ├── src/
 │   ├── app.py             # Main FastAPI backend & inference orchestration
 │   ├── index.html         # Cyberpunk-styled interactive dashboard frontend
