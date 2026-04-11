@@ -198,11 +198,23 @@ HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Файлы моделей (`models/`)
 
-| Файл | Модель | Назначение | Размер |
-|---|---|---|---|
-| `best.pt` | YOLOv8n-OBB | Детекция судов | ~22 MB |
-| `best_unet_sos.pth` | U-Net ResNet-34 | Сегментация разливов нефти | ~93 MB |
-| `anomaly_xgb.json` | XGBoost | Бинарный AIS-скоринг аномалий | ~3.5 MB |
+| Файл | Модель | Назначение | Размер | Источник |
+|---|---|---|---|---|
+| `best.pt` | YOLOv8n-OBB | Детекция судов | ~22 MB | 📦 GitHub Release |
+| `best_unet_sos.pth` | U-Net ResNet-34 | Сегментация разливов нефти | ~93 MB | 📦 GitHub Release |
+| `anomaly_xgb.json` | XGBoost | Бинарный AIS-скоринг аномалий | ~3.5 MB | ✅ В репозитории |
+
+> [!IMPORTANT]
+> Веса **YOLOv8** и **U-Net** слишком большие для Git и **не включены в репозиторий**.  
+> Скачайте их из **[GitHub Releases → TRACE MVP AI Model Weights](https://github.com/sronters/TRACE-Satellite-AI/releases/latest)** и поместите в папку `models/`.
+
+```bash
+# Быстрая установка весов (Windows PowerShell)
+New-Item -ItemType Directory -Force -Path models
+# Скачать best.pt и best_unet_sos.pth из раздела Releases вручную
+# или через gh CLI:
+gh release download --repo sronters/TRACE-Satellite-AI --dir models
+```
 
 ### 📊 Метрики AIS-модели
 
