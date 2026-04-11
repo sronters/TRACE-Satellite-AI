@@ -12,3 +12,4 @@ venv/
 node_modules/
 *.db
 *.sqlite
+_clean_comments.py

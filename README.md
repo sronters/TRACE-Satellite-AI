@@ -1,216 +1,432 @@
-# TRACE v2.0 — Tactical Reconnaissance & Analysis of Coastal Environments
+<div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.110-green) ![YOLOv8](https://img.shields.io/badge/YOLOv8-OBB-red) ![License](https://img.shields.io/badge/License-MIT-yellow)
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=36&duration=2800&pause=1200&color=0FD986&center=true&vCenter=true&width=700&lines=TRACE+v2.0;Tactical+Reconnaissance;%26+Analysis+of+Coastal+Environments;AI-powered+Maritime+Intelligence" alt="TRACE animated title" />
 
-> AI-powered satellite intelligence platform for autonomous maritime vessel detection, environmental oil spill monitoring, and dynamic tactical analysis — fully self-hostable, open-source, and multi-modal.
+<br/>
 
----
+[![Python](https://img.shields.io/badge/Python-3.11+-3776ab?logo=python&logoColor=white&style=flat-square)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?logo=fastapi&logoColor=white&style=flat-square)](https://fastapi.tiangolo.com)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-ee4c2c?logo=pytorch&logoColor=white&style=flat-square)](https://pytorch.org)
+[![XGBoost](https://img.shields.io/badge/XGBoost-2.x-ff6600?logo=xgboost&logoColor=white&style=flat-square)](https://xgboost.readthedocs.io)
+[![YOLOv8](https://img.shields.io/badge/YOLOv8-OBB-00dbde?logo=databricks&logoColor=white&style=flat-square)](https://ultralytics.com)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+[![Status](https://img.shields.io/badge/status-active-0fd986?style=flat-square)]()
 
-## 🌊 What is TRACE?
+<br/>
 
-TRACE transforms raw satellite imagery (or a set of GPS coordinates) into a complete maritime intelligence briefing in seconds — combining computer vision, SAR segmentation, real-time OSINT, and a vision-language model into a single unified pipeline.
+> **TRACE** — это платформа морской разведки на основе ИИ.  
+> Спутниковые снимки → детекция судов → AIS-аномалии → тактический отчёт.
 
-Unlike enterprise solutions (Windward, Orbital Insight) that cost $100k+/year and require your data to leave your infrastructure, TRACE runs entirely on-premise — critical for coast guards, navies, and government agencies with data sovereignty requirements.
+<br/>
 
-Input: GPS Coordinates or Satellite Image
-  ↓
-Output: Vessel detections + GPS tags + Oil spill polygon + Risk Score (0–100) + LLM Tactical Report
+<img src="https://skillicons.dev/icons?i=python,fastapi,pytorch,js,sqlite,github&theme=dark" />
 
----
-
-## 🤖 AI Models
-
-| Model | Task | Architecture | Dataset |
-|---|---|---|---|
-| YOLOv8-OBB | Vessel detection & orientation | YOLOv8s Oriented Bounding Box | DOTAv1.5 (16 classes) |
-| U-Net (ResNet34) | Oil spill segmentation | PyTorch segmentation_models_pytorch | SOS dataset |
-| Qwen 2.5-VL-72B | Tactical intelligence report generation | Vision-Language Model | HuggingFace Serverless API |
-
-### Model Performance
-
-| Model | Metric | Score |
-|---|---|---|
-| YOLOv8-OBB | mAP50 (ship class, DOTAv1.5 test set) | ~0.73 |
-| U-Net ResNet34 | IoU (SOS dataset) | ~0.68 |
-| U-Net ResNet34 | Dice Score (SOS dataset) | ~0.71 |
-
-### Why These Models?
-
-- YOLOv8-OBB: The only YOLO variant with oriented bounding boxes — essential for oblique satellite viewing angles where axis-aligned boxes fail. Corrects for heading/orientation automatically.
-- U-Net + ResNet34: SAR imagery is inherently noisy (backscatter). U-Net's encoder-decoder skip connections preserve spatial detail; ResNet34 encoder (ImageNet pretrained) provides robust feature extraction. Custom 0.5 × BCE + 0.5 × Dice loss handles severe class imbalance (spills < 5% of pixels).
-- Qwen 2.5-VL-72B: Top open-weight vision-language model. No vendor lock-in, no per-token OpenAI pricing at scale. Hallucination risk is controlled via deterministic prompt injection — the model receives structured detector outputs and can only reason within the provided context.
+</div>
 
 ---
 
-## 🎯 Key Features
+## 📋 Содержание
 
-- Multi-Modal Fusion Pipeline — Parallel execution of optical vessel detection (YOLO) + SAR oil spill segmentation (U-Net) + weather/news OSINT, all synthesized into one risk score
-- Zero-Prep Auto-Routing — Input GPS coordinates and TRACE automatically fetches and stitches satellite map tiles — no pre-downloaded imagery needed
-- Risk Engine (0–100 Score) — Multi-factor scoring: vessel density + weather multiplier (wind > 30 km/h) + pollution penalty (+40 for any spill) + geopolitical news sentiment overlay
-- On-Premise Deployable — Self-hosted with no external data dependency beyond open APIs (ESA Sentinel, Open-Meteo)
-- Live Fleet Registry — Cross-reference detected vessels against registered friendly fleet database to flag unidentified tracks
-- LLM Tactical Reports — Qwen synthesizes all signals into a military-grade written briefing with correlation analysis
-- Interactive Dashboard — Leaflet.js map with bounding box overlays, segmentation polygons, and real-time alert feed
-
----
-
-## 📂 Project Structure
- TRACEEE/
-├── src/
-│   ├── app.py             # Main FastAPI backend & inference orchestration
-│   ├── index.html         # Cyberpunk-styled interactive dashboard frontend
-│   ├── intelligence.py    # OSINT gathering (Weather, News NLP, Sentinel Hub)
-│   ├── risk_engine.py     # Multi-factor risk calculation & Qwen context builder
-│   ├── database.py        # SQLite history, alerts, and analysis state management
-│   └── fleet.py           # Fleet registry & port management
-├── models/
-│   ├── best.pt            # YOLOv8s-OBB weights (DOTAv1.5, 16 classes)
-│   └── best_unet_sos.pth  # U-Net weights (SOS dataset, BCE+Dice loss)
-├── notebooks/
-│   ├── yolo8n-dota.ipynb        # YOLO training notebook
-│   └── oilspill-segmentation.py # U-Net training pipeline
-├── docs/
-│   ├── TECHNICAL_DETAILS.md     # Deep-dive architecture & AI documentation
-│   └── TRACE_PitchDeck.pdf      # Executive pitch presentation
-├── trace.db               # SQLite database (auto-generated on first run)
-├── requirements.txt
-├── .env.example           # Environment variable template
-└── .env                   # Your local config (never commit this)
+- [🎯 Возможности](#-возможности)
+- [🏗️ Архитектура](#%EF%B8%8F-архитектура)
+- [⚡ Быстрый старт](#-быстрый-старт)
+- [🔧 Конфигурация](#-конфигурация)
+- [🤖 ML-модели](#-ml-модели)
+- [🌐 API-эндпоинты](#-api-эндпоинты)
+- [📁 Структура проекта](#-структура-проекта)
+- [🗄️ База данных](#%EF%B8%8F-база-данных)
+- [📦 Зависимости](#-зависимости)
+- [🚀 Деплой](#-деплой)
+- [📄 Лицензия](#-лицензия)
 
 ---
 
-## 🚀 Quick Start
+## 🎯 Возможности
 
-### Prerequisites
-- Python 3.10+
-- ~4GB disk space for model weights
-- A free HuggingFace account for Qwen reports
+<table>
+<tr>
+<td width="50%">
 
-### 1. Install dependencies
+### 🛰️ Детекция судов
+- **YOLOv8-OBB** — обнаружение судов со спутниковых снимков
+- Поддержка **оптического** и **SAR-радарного** режимов
+- Автоматическое скачивание тайлов ESRI
+- GPS-геолокация каждого судна по пикселям
+- Водяная маска для фильтрации суши
+
+### 🔴 Обнаружение разливов нефти
+- **U-Net** на энкодере ResNet-34
+- Сегментация SAR/оптических снимков
+- Расчёт площади разлива в м²
+- Полигоны для отрисовки на карте
+
+</td>
+<td width="50%">
+
+### 🚨 AIS-аномалии (НОВОЕ)
+- **XGBoost** бинарный классификатор
+- ROC-AUC ≈ **0.9999** на 7.1M пингов
+- Детектирует: пробелы > 20 мин, невозможную скорость (> 60 уз), резкие манёвры, движение с якорным статусом
+- Компактная форма ввода прямо в UI
+
+### 🌐 Разведывательный слой
+- Погода в реальном времени (OpenWeatherMap)
+- Новостной тикер из региона
+- Sentinel-2 / Sentinel-1 через Sentinel Hub WMS
+- Тактический отчёт от **Qwen 2.5-VL-72B**
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🏗️ Архитектура
+
+```mermaid
+graph TB
+    subgraph Frontend["🖥️ Фронтенд (Vanilla JS + Leaflet)"]
+        UI[Карта + Панели управления]
+        AIS_FORM[AIS Anomaly Check]
+    end
+
+    subgraph Backend["⚙️ FastAPI Backend"]
+        API["/process · /api/anomaly/score · /api/fleet"]
+        INTEL[intelligence.py<br/>Погода + Новости + Sentinel]
+        RISK[risk_engine.py<br/>Скоринг риска 0-100]
+        DB[(trace.db<br/>SQLite)]
+    end
+
+    subgraph ML["🤖 ML Pipeline"]
+        YOLO[YOLOv8-OBB<br/>Детекция судов]
+        UNET[U-Net ResNet-34<br/>Сегментация разливов]
+        XGB[XGBoost<br/>AIS-аномалии]
+        QWEN[Qwen 2.5-VL-72B<br/>Тактический отчёт]
+    end
+
+    subgraph Data["📡 Источники данных"]
+        ESRI[ESRI World Imagery]
+        OWM[OpenWeatherMap]
+        NEWS[GNews API]
+        SH[Sentinel Hub WMS]
+    end
+
+    UI --> API
+    AIS_FORM --> API
+    API --> INTEL
+    API --> RISK
+    API --> DB
+    API --> YOLO
+    API --> UNET
+    API --> XGB
+    RISK --> QWEN
+    INTEL --> OWM
+    INTEL --> NEWS
+    INTEL --> SH
+    API --> ESRI
+```
+
+---
+
+## ⚡ Быстрый старт
+
+### 1. Клонирование репозитория
+
+```bash
+git clone https://github.com/YOUR_USERNAME/TRACE-Satellite-AI.git
+cd TRACE-Satellite-AI
+```
+
+### 2. Создание виртуального окружения
+
+```bash
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# Linux / macOS
+source venv/bin/activate
+```
+
+### 3. Установка зависимостей
+
+```bash
 pip install -r requirements.txt
 
-### 2. Configure environment
+# Дополнительно для AIS-аномалий
+pip install xgboost scikit-learn
+```
+
+### 4. Настройка переменных окружения
+
+```bash
 cp .env.example .env
+# Откройте .env и заполните HF_TOKEN
+```
 
-Edit .env with your keys:
+### 5. Запуск сервера
 
-# Required — enables Qwen 2.5-VL tactical report generation
-HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxx          # → huggingface.co/settings/tokens (free)
+```bash
+cd src
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
 
-# Optional — enables geopolitical news sentiment analysis
-NEWS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxx     # → newsapi.org (free tier: 100 req/day)
-
-# No key needed — open APIs used automatically:
-# Open-Meteo (weather), OSM tiles (map auto-download)
-
-### 3. Place model weights
-models/best.pt             # YOLOv8-OBB weights
-models/best_unet_sos.pth   # U-Net weights
-
-### 4. Start the backend
-uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
-
-### 5. Open the dashboard
-http://localhost:8000
+Откройте браузер: **http://localhost:8000**
 
 ---
 
-## 📡 API Reference
+## 🔧 Конфигурация
 
-| Method | Endpoint | Description |
+Создайте файл `.env` в корне проекта:
+
+```env
+# Обязательно
+HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+| Переменная | Описание | Обязательно |
 |---|---|---|
-| GET | / | Interactive dashboard UI |
-| GET | /health | System diagnostics & loaded model status |
-| POST | /process | Core pipeline — accepts image file upload OR lat/lon params for auto-download |
-| GET | /api/history | Past analysis sessions from SQLite |
-| GET | /api/alerts | Active threat alerts (Risk Score > 75) |
-| GET | /api/intel | Quick OSINT snapshot (weather + news) for a coordinate |
-| GET | /api/fleet | Registered fleet database |
-| GET | /api/route | Maritime route calculation (land-avoidance) |
+| `HF_TOKEN` | HuggingFace API токен для Qwen 2.5-VL-72B | ✅ Да |
 
-### Example: Process by coordinates
-curl -X POST "http://localhost:8000/process" \
-  -F "lat=37.9" \
-  -F "lon=23.7"
-
-### Example: Process by image upload
-curl -X POST "http://localhost:8000/process" \
-  -F "file=@/path/to/satellite_image.jpg"
+> **Получение HF_TOKEN:**  
+> Зарегистрируйтесь на [huggingface.co](https://huggingface.co) → Settings → Access Tokens → New token (PRO требуется для Qwen 72B)
 
 ---
 
-## 🗺 System Architecture
-Client Request (/process)
-        │
-        ├──[Coordinates]──► Download & Stitch Map Tiles ─┐
-        │                                                  ▼
-        └──[Image Upload]─────────────────────► Image Preprocessing
-                                                          │
-                        ┌─────────────────────────────────┤
-                        ▼                                 ▼
-              YOLOv8-OBB Detection           U-Net SAR Segmentation
-              (vessel GPS + heading)         (oil spill polygon)
-                        │                                 │
-                        └──────────────┬──────────────────┘
-                                       ▼
-                         OSINT Layer (parallel):
-                         ├─ Open-Meteo Weather API
-                         └─ News NLP Sentiment (TextBlob)
-                                       │
-                                       ▼
-                              Risk Engine (0–100)
-                                       │
-                                       ▼
-                     Qwen 2.5-VL-72B Tactical Report
-                                       │
-                                       ▼
-                          SQLite (trace.db) → JSON Response
+## 🤖 ML-модели
 
----
+### Файлы моделей (`models/`)
 
-## 🗄 Data Persistence & Production Path
+| Файл | Модель | Назначение | Размер |
+|---|---|---|---|
+| `best.pt` | YOLOv8n-OBB | Детекция судов | ~22 MB |
+| `best_unet_sos.pth` | U-Net ResNet-34 | Сегментация разливов нефти | ~93 MB |
+| `anomaly_xgb.json` | XGBoost | Бинарный AIS-скоринг аномалий | ~3.5 MB |
 
-Current (MVP): SQLite — zero-config, file-based, suitable for local deployment and demos.
+### 📊 Метрики AIS-модели
 
-Production roadmap:
-SQLite (MVP) → PostgreSQL + PostGIS (geospatial queries at scale) → TimescaleDB (time-series vessel tracking)
+Обучение на AIS-данных за 2022-03-31 (7 167 046 пингов, 114 382 аномалий).
 
-Database schema:
-- analysis_history — full JSON blobs of each pipeline run (detections, OSINT, Qwen report)
-- alerts — high-priority alerts triggered by Risk Engine (Risk > 75 → "Critical Incident")
-- fleet / ports — known vessel registries for anomaly cross-referencing
-
----
-
-## 🌍 Target Use Cases
-
-| Sector | Application |
+| Метрика | Среднее по 5 фолдам |
 |---|---|
-| Coast Guard / Navy | Autonomous patrol coverage, unidentified vessel flagging |
-| Maritime Insurance | Real-time risk scoring for vessel underwriting |
-| Environmental Agencies | Rapid oil spill detection and drift vector calculation |
-| Port Authorities | Predictive threat assessment for incoming traffic |
+| Accuracy | **99.97%** |
+| Precision | **98.13%** |
+| Recall | **99.95%** |
+| F1-Score | **99.03%** |
+| ROC-AUC | **99.9997%** |
+
+### Признаки аномалий (XGBoost)
+
+```
+MMSI · LAT · LON · SOG · COG · Heading · VesselType · Status
+Length · Width · Draft · Cargo
+
+Вычисляемые:
+  dt_min           → временной разрыв между пингами (мин)
+  dist_nm          → дистанция между пингами (морские мили)
+  implied_speed_kn → расчётная скорость (уз)
+  delta_heading    → резкий поворот (°) — 1 пинг назад
+  delta_heading_2min → поворот (°) — 2 пинга назад
+  speed_diff       → разница SOG и расчётной скорости
+  turn_rate        → скорость поворота (°/мин)
+  is_fast          → SOG > 20 уз (бинарный)
+```
+
+**Условия аномалии (`label = 1`):**
+- 🕐 Пропуск сигнала > **20 минут**
+- ⚡ Расчётная скорость > **60 узлов** (физически невозможно)
+- 🔄 Поворот > **120°** за 2 пинга при скорости > 10 уз
+- ⚓ Статус "на якоре" (1 или 5) при скорости > **3 узлов**
 
 ---
 
-## 🛣 Roadmap
+## 🌐 API-эндпоинты
 
-- [x] YOLOv8-OBB vessel detection with GPS tagging
-- [x] U-Net SAR oil spill segmentation
-- [x] Multi-factor Risk Engine
-- [x] Qwen 2.5-VL tactical report generation
-- [x] Real-time weather + news OSINT
-- [ ] Real-time Sentinel Hub streaming integration
-- [ ] AIS transponder anomaly correlation
-- [ ] Predictive drift vector modeling for oil spills
-- [ ] PostgreSQL + PostGIS migration for production scale
-- [ ] Multi-region deployment with load balancing
+### Основные
+
+| Метод | Путь | Описание |
+|---|---|---|
+| `GET` | `/` | Веб-интерфейс |
+| `GET` | `/health` | Статус сервисов |
+| `POST` | `/process` | Анализ изображения или координат |
+
+### AIS-аномалии
+
+```http
+POST /api/anomaly/score
+Content-Type: application/json
+
+{
+  "lat": 29.7876,
+  "lon": -95.0807,
+  "sog": 65.0,
+  "heading": 226,
+  "status": 0,
+  "mmsi": 367702220,
+
+  // Опционально: предыдущий пинг
+  "prev_lat": 29.770,
+  "prev_lon": -95.065,
+  "prev_heading": 220,
+  "prev_dt_min": 5.0
+}
+```
+
+**Ответ:**
+```json
+{
+  "is_anomaly": true,
+  "probability": 0.9873,
+  "label": "ANOMALY"
+}
+```
+
+### Флот и порты
+
+| Метод | Путь | Описание |
+|---|---|---|
+| `GET` | `/api/fleet` | Список флота |
+| `POST` | `/api/fleet/import/json` | Импорт флота из JSON |
+| `POST` | `/api/fleet/import/csv` | Импорт флота из CSV |
+| `DELETE` | `/api/fleet/{id}` | Удалить судно |
+| `GET` | `/api/ports` | Список портов |
+| `POST` | `/api/ports` | Добавить порт |
+
+### История и аналитика
+
+| Метод | Путь | Описание |
+|---|---|---|
+| `GET` | `/api/history` | История анализов |
+| `GET` | `/api/analysis/{id}` | Детали конкретного анализа |
+| `GET` | `/api/alerts` | Активные алерты |
+| `GET` | `/api/stats` | Статистика системы |
+| `GET` | `/api/vessels/heatmap` | Тепловая карта судов |
+| `GET` | `/api/intel` | Разведывательные данные по координатам |
+| `GET` | `/api/route` | Морской маршрут между точками |
 
 ---
 
-## 📚 Documentation
+## 📁 Структура проекта
 
-- [docs/TECHNICAL_DETAILS.md](docs/TECHNICAL_DETAILS.md) — Deep-dive: model architectures, training hyperparameters, loss functions, OSINT pipeline
-- [docs/TRACE_PitchDeck.pdf](docs/TRACE_PitchDeck.pdf) — Executive pitch presentation
+```
+TRACE-Satellite-AI/
+│
+├── 📂 src/
+│   ├── app.py              # FastAPI сервер + все эндпоинты
+│   ├── intelligence.py     # Погода, новости, Sentinel Hub
+│   ├── risk_engine.py      # Движок расчёта риска (0-100)
+│   ├── anomaly_scorer.py   # XGBoost AIS-аномалии ← НОВОЕ
+│   ├── database.py         # SQLite: история, алерты, статистика
+│   ├── fleet.py            # Реестр флота и портов
+│   └── index.html          # SPA фронтенд (Leaflet + Vanilla JS)
+│
+├── 📂 models/
+│   ├── best.pt             # YOLOv8n-OBB веса
+│   ├── best_unet_sos.pth   # U-Net ResNet-34 веса
+│   └── anomaly_xgb.json    # XGBoost AIS-классификатор
+│
+├── 📂 notebooks/
+│   ├── trace-anomaly-xgb.ipynb   # Обучение AIS-модели
+│   ├── oilspill-segmentation.ipynb
+│   └── yolo8n-dota.ipynb
+│
+├── 📂 docs/
+│   └── TECHNICAL_DETAILS.md  # Полная техническая документация (RU)
+│
+├── .env                 # Секреты (не в git!)
+├── .env.example         # Пример конфигурации
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
 
 ---
+
+## 🗄️ База данных
+
+TRACE использует **SQLite** (`trace.db`). Основные таблицы:
+
+```sql
+analyses    — история всех анализов (координаты, детекции, риск)
+alerts      — сгенерированные алерты с подтверждением
+fleet       — реестр судов флота
+ports       — реестр портов с радиусами
+```
+
+---
+
+## 📦 Зависимости
+
+```txt
+fastapi                    # Web-фреймворк
+uvicorn[standard]          # ASGI-сервер
+python-multipart           # Загрузка файлов
+python-dotenv              # .env файлы
+ultralytics                # YOLOv8
+torch + torchvision        # PyTorch (GPU/CPU)
+Pillow                     # Обработка изображений
+numpy                      # Вычисления
+httpx                      # Async HTTP-клиент
+opencv-python-headless     # Компьютерное зрение
+segmentation-models-pytorch # U-Net архитектура
+huggingface_hub            # HF Inference API
+
+# Для AIS-аномалий:
+xgboost                    # Классификатор
+scikit-learn               # Препроцессинг
+```
+
+---
+
+## 🚀 Деплой
+
+### Docker (рекомендуется)
+
+```dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt && \
+    pip install xgboost scikit-learn
+COPY . .
+EXPOSE 8000
+CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+```bash
+docker build -t trace-v2 .
+docker run -p 8000:8000 --env-file .env trace-v2
+```
+
+### Systemd (Linux production)
+
+```ini
+[Unit]
+Description=TRACE Maritime AI
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/trace
+ExecStart=/opt/trace/venv/bin/uvicorn src.app:app --host 0.0.0.0 --port 8000 --workers 2
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+---
+
+## 📄 Лицензия
+
+MIT License © 2024 TRACE Team
+
+---
+
+<div align="center">
+
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=14&duration=4000&pause=2000&color=0FD986&center=true&vCenter=true&width=500&lines=Built+with+%E2%9D%A4%EF%B8%8F+for+Maritime+Safety;TRACE+v2.0+%E2%80%94+AI-Powered+Maritime+Intelligence" alt="footer" />
+
+[![Star this repo](https://img.shields.io/github/stars/YOUR_USERNAME/TRACE-Satellite-AI?style=social)](https://github.com/YOUR_USERNAME/TRACE-Satellite-AI)
+
+</div>

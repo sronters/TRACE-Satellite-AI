@@ -100,7 +100,7 @@ def save_analysis(
     ))
     analysis_id = c.lastrowid
 
-    # Save individual vessels
+                             
     for v in vessels:
         gps = v.get("gps", {}) or {}
         is_dark = 1 if (v.get("length_m", 0) > 60 and v.get("confidence", 1) < 0.45) else 0
@@ -117,7 +117,7 @@ def save_analysis(
             is_dark,
         ))
 
-    # Save alerts for high-risk factors
+                                       
     for factor in risk_report.factors:
         if factor.severity in ("high", "medium"):
             c.execute("""

@@ -51,7 +51,7 @@ def init_fleet_tables():
     CREATE INDEX IF NOT EXISTS idx_fleet_name ON fleet(name);
     """)
 
-    # Check and add new columns if upgrading from older version
+                                                               
     c = conn.cursor()
     c.execute("PRAGMA table_info(fleet)")
     columns = [row[1] for row in c.fetchall()]
@@ -174,7 +174,7 @@ def cross_reference_vessel(length_m: float, width_m: float, gps_lat: Optional[fl
     """
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
-    # Find vessels within 20% size tolerance
+                                            
     lo, hi = length_m * 0.8, length_m * 1.2
     rows = conn.execute(
         "SELECT * FROM fleet WHERE length_m BETWEEN ? AND ? ORDER BY ABS(length_m - ?) LIMIT 3",

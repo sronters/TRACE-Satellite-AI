@@ -26,20 +26,20 @@ from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-# ── Load .env from project root ───────────────────────────────────────────────
+                                                                                
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-# ── TRACE modules ─────────────────────────────────────────────────────────────
+                                                                                
 sys.path.insert(0, str(Path(__file__).parent))
-from intelligence import gather_intelligence          # build_qwen_context_stub removed (unused)
+from intelligence import gather_intelligence                                                    
 from risk_engine import calculate_risk, build_qwen_context
 from database import init_db, save_analysis, get_history, get_analysis, get_alerts, get_stats, get_vessel_heatmap, acknowledge_alert
 from fleet import init_fleet_tables, enrich_detections_with_fleet, get_nearby_port, get_fleet, get_ports, add_port, import_fleet_from_json, import_fleet_from_csv, delete_vessel, delete_port
 
-# ── ENV ───────────────────────────────────────────────────────────────────────
+                                                                                
 HF_TOKEN = os.getenv("HF_TOKEN", "")
 
-# ── MODEL PATHS ───────────────────────────────────────────────────────────────
+                                                                                
 YOLO_WEIGHTS = Path("models/best.pt")
 UNET_WEIGHTS = Path("models/best_unet_sos.pth")
 INDEX_HTML   = Path("src/index.html")
@@ -60,7 +60,7 @@ def load_models():
         try:
             from ultralytics import YOLO
             yolo_model = YOLO(str(YOLO_WEIGHTS))
-            print(f"[TRACE] YOLOv8-OBB loaded ✓ ({DEVICE})")
+            print(f"[TRACE] YOLOv8-OBB loaded [OK] ({DEVICE})")
         except Exception as e:
             print(f"[TRACE] YOLO load error: {e}")
 
@@ -80,7 +80,7 @@ def load_models():
             m.to(DEVICE)
             m.eval()
             unet_model = m
-            print(f"[TRACE] U-Net loaded ✓ ({DEVICE})")
+            print(f"[TRACE] U-Net loaded [OK] ({DEVICE})")
         except Exception as e:
             print(f"[TRACE] U-Net load error: {e}")
 
@@ -90,7 +90,7 @@ async def lifespan(app: FastAPI):
     init_db()
     init_fleet_tables()
     load_models()
-    print("[TRACE] v2.0 ready ✓")
+    print("[TRACE] v2.0 ready [OK]")
     yield
 
 
@@ -104,8 +104,6 @@ app.add_middleware(
     allow_credentials=False,
 )
 
-
-# ── TILE DOWNLOAD ─────────────────────────────────────────────────────────────
 
 def _lat_lon_to_tile(lat: float, lon: float, zoom: int) -> Tuple[int, int]:
     """Convert lat/lon to WMTS tile xy."""
@@ -174,7 +172,7 @@ async def download_area_image(
         except Exception:
             continue
 
-    # Compute bounding box from tile coordinates
+                                                
     top_lat, left_lon = _tile_to_lat_lon(cx - radius, cy - radius, zoom)
     bot_lat, right_lon = _tile_to_lat_lon(cx + radius + 1, cy + radius + 1, zoom)
 
@@ -184,7 +182,6 @@ async def download_area_image(
     return buf.getvalue(), (bot_lat, top_lat, left_lon, right_lon)
 
 
-# ── SERVE FRONTEND ────────────────────────────────────────────────────────────
 @app.get("/", response_class=HTMLResponse)
 async def root():
     if INDEX_HTML.exists():
@@ -192,7 +189,6 @@ async def root():
     return "<h1>TRACE v2.0</h1><p>Place index.html in src/</p>"
 
 
-# ── HEALTH ────────────────────────────────────────────────────────────────────
 @app.get("/health")
 async def health():
     return {
@@ -205,7 +201,6 @@ async def health():
     }
 
 
-# ── MAIN PROCESS ENDPOINT ─────────────────────────────────────────────────────
 @app.post("/process")
 async def process(
     file: Optional[UploadFile] = File(None),
@@ -220,19 +215,19 @@ async def process(
     Accepts image upload OR coordinates (auto-downloads satellite tiles).
     Returns detections + risk + intel + qwen report in one response.
     """
-    # 1. Get image bytes
+                        
     img_bytes = None
-    bbox = None  # (lat_min, lat_max, lon_min, lon_max)
+    bbox = None                                        
 
     if file and file.filename:
         img_bytes = await file.read()
-        # Estimate bbox from coords if available
+                                                
         if lat or lon:
             delta = 0.05
             bbox = (lat - delta, lat + delta, lon - delta, lon + delta)
 
     elif lat != 0.0 or lon != 0.0:
-        # Auto-download satellite tiles for the given coordinates
+                                                                 
         print(f"[TRACE] Downloading tiles for {lat:.4f},{lon:.4f} zoom={zoom}")
         img_bytes, bbox = await download_area_image(lat, lon, zoom=zoom, radius=2)
         if not img_bytes:
@@ -241,13 +236,13 @@ async def process(
     else:
         raise HTTPException(400, "Provide an image file or lat/lon coordinates.")
 
-    # 2. Gather intelligence in parallel with model inference
+                                                             
     has_coords = (lat != 0.0 or lon != 0.0)
     intel_task = asyncio.create_task(
         gather_intelligence(lat, lon, mode) if has_coords else _empty_intel(lat, lon)
     )
 
-    # 3. Run models on the image
+                                
     detections = {"vessels": [], "oil_spill_area_m2": 0, "oil_polygons": []}
     processed_img_b64 = None
 
@@ -256,10 +251,10 @@ async def process(
             _run_models, img_bytes, mode, lat, lon, bbox
         )
 
-    # 4. Await intel
+                    
     intel = await intel_task
 
-    # 5. Calculate risk
+                       
     risk = calculate_risk(
         vessels=detections.get("vessels", []),
         oil_spill_area_m2=detections.get("oil_spill_area_m2"),
@@ -268,18 +263,18 @@ async def process(
         news=intel.get("news", []),
     )
 
-    # 6. Cross-reference with fleet registry
+                                            
     if detections.get("vessels"):
         detections["vessels"] = enrich_detections_with_fleet(detections["vessels"])
     nearby_port = get_nearby_port(lat, lon) if (lat or lon) else None
 
-    # 7. Build enriched Qwen prompt
+                                   
     qwen_context = build_qwen_context(intel, risk, detections)
 
-    # 8. Get Qwen report
+                        
     qwen_report = await _call_qwen(qwen_context, processed_img_b64)
 
-    # 9. Save to DB
+                   
     analysis_id = await asyncio.to_thread(
         save_analysis, lat, lon, mode, detections, risk, intel, qwen_report
     )
@@ -292,12 +287,11 @@ async def process(
         "nearby_port": nearby_port,
         "qwen_report": qwen_report,
         "processed_image": processed_img_b64,
-        "image_bbox": list(bbox) if bbox else None,  # [lat_min, lat_max, lon_min, lon_max]
+        "image_bbox": list(bbox) if bbox else None,                                        
         "timestamp": datetime.utcnow().isoformat(),
     })
 
 
-# ── WATER MASK ────────────────────────────────────────────────────────────────
 def _create_water_mask(img_np: np.ndarray, mode: str = "optical") -> np.ndarray:
     """
     Improved water mask using spectral ratios.
@@ -306,9 +300,9 @@ def _create_water_mask(img_np: np.ndarray, mode: str = "optical") -> np.ndarray:
     """
     if mode == "sar":
         gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
-        # Adaptive threshold: water = locally dark areas
+                                                        
         blur = cv2.GaussianBlur(gray, (21, 21), 0)
-        # Otsu finds boundary between water (dark) and land/ships (bright)
+                                                                          
         thresh, _ = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
         _, water = cv2.threshold(blur, thresh * 0.8, 255, cv2.THRESH_BINARY_INV)
     else:
@@ -317,36 +311,34 @@ def _create_water_mask(img_np: np.ndarray, mode: str = "optical") -> np.ndarray:
         b = img_np[:, :, 2].astype(np.float32)
         eps = 1.0
 
-        # NDWI-style: water has high blue, low red
-        # Blue dominance ratio: (B - R) / (B + R + eps)
-        bdr = (b - r) / (b + r + eps)  # >0 = blue dominant = water
-        # Green-Red-Blue: water tends to be darker overall
+                                                  
+        bdr = (b - r) / (b + r + eps)                              
+                                                          
         brightness = (r + g + b) / 3.0
 
-        # Hue from HSV for blue-green colour confirmation
+                                                         
         hsv = cv2.cvtColor(img_np, cv2.COLOR_RGB2HSV)
         h_ch = hsv[:, :, 0]
 
-        # Water conditions (all must be plausible water):
-        is_blue_dominant = bdr > 0.05           # more blue than red
-        is_not_green_land = (g < b * 1.3)       # vegetation: strong green
-        is_dark_enough = brightness < 180        # water rarely super bright
-        is_water_hue = (h_ch >= 80) & (h_ch <= 140)  # ocean blue-cyan range
+                                                         
+        is_blue_dominant = bdr > 0.05                               
+        is_not_green_land = (g < b * 1.3)                                 
+        is_dark_enough = brightness < 180                                   
+        is_water_hue = (h_ch >= 80) & (h_ch <= 140)                         
 
-        # Deep/dark ocean: very low brightness, roughly uniform dark
+                                                                    
         is_deep_ocean = (brightness < 40) & ((b - r) > -5)
 
         water = ((is_blue_dominant & is_not_green_land & is_dark_enough) |
                  is_water_hue | is_deep_ocean).astype(np.uint8) * 255
 
-    # ── Morphological cleanup ───────────────────────────────────────────────
-    # 1. Fill holes in water body (small islands/ships create gaps)
+                                                                              
     kernel_close = np.ones((31, 31), np.uint8)
     water = cv2.morphologyEx(water, cv2.MORPH_CLOSE, kernel_close)
-    # 2. Remove small isolated blobs (isolated dark fields, shadows)
+                                                                    
     kernel_open = np.ones((12, 12), np.uint8)
     water = cv2.morphologyEx(water, cv2.MORPH_OPEN, kernel_open)
-    # 3. Keep only large water bodies (> 0.5% of image area)
+                                                            
     n_labels, labels, stats, _ = cv2.connectedComponentsWithStats(water, connectivity=8)
     min_area = water.size * 0.005
     filtered = np.zeros_like(water)
@@ -356,7 +348,6 @@ def _create_water_mask(img_np: np.ndarray, mode: str = "optical") -> np.ndarray:
     return filtered
 
 
-# ── FLEET API ENDPOINTS ────────────────────────────────────────────────────────
 @app.get("/api/fleet")
 async def api_fleet():
     return get_fleet()
@@ -436,6 +427,64 @@ async def api_route(origin_lat: float, origin_lon: float, dest_lat: float, dest_
         raise HTTPException(500, f"Routing error: {e}")
 
 
+@app.post("/api/anomaly/score")
+async def api_anomaly_score(data: dict):
+    """
+    Binary anomaly scoring for a single AIS ping.
+
+    Required body fields:  lat, lon, sog
+    Optional current ping: mmsi, heading, status, cog, vessel_type, length, width, draft, cargo
+    Optional previous ping: prev_lat, prev_lon, prev_heading, prev_dt_min (minutes ago)
+    """
+    try:
+        from anomaly_scorer import score_ais_record                                   
+        from datetime import datetime, timedelta
+
+        current: dict = {
+            "MMSI":       data.get("mmsi"),
+            "LAT":        data.get("lat"),
+            "LON":        data.get("lon"),
+            "SOG":        data.get("sog"),
+            "COG":        data.get("cog"),
+            "Heading":    data.get("heading"),
+            "Status":     data.get("status", 0),
+            "VesselType": data.get("vessel_type"),
+            "Length":     data.get("length"),
+            "Width":      data.get("width"),
+            "Draft":      data.get("draft"),
+            "Cargo":      data.get("cargo"),
+        }
+
+        prev = None
+        if data.get("prev_lat") is not None:
+            prev = {
+                "LAT":     data.get("prev_lat"),
+                "LON":     data.get("prev_lon"),
+                "Heading": data.get("prev_heading"),
+            }
+                                                                                
+            dt_min = data.get("prev_dt_min")
+            if dt_min is not None:
+                now = datetime.utcnow()
+                current["BaseDateTime"] = now.isoformat()
+                prev["BaseDateTime"] = (now - timedelta(minutes=float(dt_min))).isoformat()
+
+        result = await asyncio.to_thread(score_ais_record, current, prev)
+
+        return {
+            "is_anomaly":  result["is_anomaly"],
+            "probability": round(result["probability"], 4),
+            "label":       "ANOMALY" if result["is_anomaly"] else "NORMAL",
+        }
+
+    except ImportError as exc:
+        raise HTTPException(503, f"Anomaly scorer unavailable (install xgboost + scikit-learn): {exc}")
+    except FileNotFoundError as exc:
+        raise HTTPException(503, f"Model file not found: {exc}")
+    except Exception as exc:
+        raise HTTPException(500, f"Scoring error: {exc}")
+
+
 def _run_models(
     img_bytes: bytes,
     mode: str,
@@ -449,9 +498,9 @@ def _run_models(
     """
     img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
     h, w = img.height, img.width
-    GSD = 3.0  # default metres per pixel
+    GSD = 3.0                            
 
-    # If we have a bbox, compute more accurate GSD
+                                                  
     if bbox:
         lat_min, lat_max, lon_min, lon_max = bbox
         R = 6_371_000
@@ -482,7 +531,7 @@ def _run_models(
     img_np = np.array(img)
     annotated = img_np.copy()
 
-    # ── WATER MASK ──────────────────────────────────────────────────────────────
+                                                                                  
     water_mask = _create_water_mask(img_np, mode)
     water_coverage = np.sum(water_mask > 0) / water_mask.size
     print(f"[TRACE] Water coverage: {water_coverage:.1%}")
@@ -490,7 +539,7 @@ def _run_models(
     water_tint[water_mask > 0] = (water_tint[water_mask > 0] * 0.88 + np.array([0, 20, 40]) * 0.12).astype(np.uint8)
     annotated = water_tint
 
-    # ── YOLO ──────────────────────────────────────────────────────────────────
+                                                                                
     if yolo_model and mode in ("optical", "sar", "dual"):
         experimental = (mode == "sar")
         results = yolo_model(img, verbose=False, conf=0.1, iou=0.45, imgsz=1024)
@@ -574,7 +623,7 @@ def _run_models(
                         "gps": {"lat": vessel_lat, "lon": vessel_lon},
                     })
 
-    # ── U-NET ─────────────────────────────────────────────────────────────────
+                                                                                
     if unet_model and mode in ("sar", "dual"):
         gray = Image.fromarray(img_np).convert("L")
         arr = np.array(gray.resize((512, 512)), dtype=np.float32)
@@ -603,14 +652,13 @@ def _run_models(
         overlay[mask_full > 0] = [255, 50, 50]
         annotated = cv2.addWeighted(annotated, 0.6, overlay, 0.4, 0)
 
-    # ── Encode ────────────────────────────────────────────────────────────────
+                                                                                
     _, buf = cv2.imencode(".jpg", cv2.cvtColor(annotated, cv2.COLOR_RGB2BGR),
                           [cv2.IMWRITE_JPEG_QUALITY, 85])
     b64 = base64.b64encode(buf).decode()
     return detections, b64
 
 
-# ── QWEN 2.5-VL-72B ───────────────────────────────────────────────────────────
 async def _call_qwen(context: str, img_b64: Optional[str] = None) -> str:
     """Call Qwen2.5-VL-72B-Instruct via HuggingFace Inference API (HF PRO required)."""
     if not HF_TOKEN:
@@ -618,7 +666,7 @@ async def _call_qwen(context: str, img_b64: Optional[str] = None) -> str:
 
     MODEL = "Qwen/Qwen2.5-VL-72B-Instruct"
 
-    # ── Resize guard: keep payload under ~8MB ─────────────────────────────
+                                                                            
     safe_img_b64 = None
     if img_b64:
         try:
@@ -638,7 +686,7 @@ async def _call_qwen(context: str, img_b64: Optional[str] = None) -> str:
             print(f"[TRACE] Image prep failed, sending text only: {e}")
             safe_img_b64 = None
 
-    # ── Build multimodal message ───────────────────────────────────────────
+                                                                             
     user_content = []
     if safe_img_b64:
         user_content.append({
@@ -670,7 +718,7 @@ async def _call_qwen(context: str, img_b64: Optional[str] = None) -> str:
         },
     ]
 
-    # ── API call ───────────────────────────────────────────────────────────
+                                                                             
     try:
         async with httpx.AsyncClient(timeout=90) as client:
             r = await client.post(
@@ -741,7 +789,6 @@ async def _empty_intel(lat: float = 0, lon: float = 0) -> dict:
     }
 
 
-# ── DATABASE / HISTORY ENDPOINTS ──────────────────────────────────────────────
 @app.get("/api/history")
 async def api_history(limit: int = 20):
     return get_history(limit)

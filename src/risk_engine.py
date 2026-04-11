@@ -10,16 +10,16 @@ from typing import Optional
 @dataclass
 class RiskFactor:
     name: str
-    score: int        # contribution to total (positive)
-    severity: str     # "high" | "medium" | "low"
+    score: int                                          
+    severity: str                                
     detail: str
 
 
 @dataclass
 class RiskReport:
-    total: int                          # 0-100
-    level: str                          # "CRITICAL" | "HIGH" | "MEDIUM" | "LOW"
-    level_color: str                    # hex for UI
+    total: int                                 
+    level: str                                                                  
+    level_color: str                                
     factors: list[RiskFactor] = field(default_factory=list)
     recommended_actions: list[str] = field(default_factory=list)
     summary: str = ""
@@ -58,12 +58,12 @@ def calculate_risk(
     factors: list[RiskFactor] = []
     total = 0
 
-    # ── VESSEL ANALYSIS ──────────────────────────────────────────────────────
+                                                                               
     n_vessels = len(vessels)
     large_vessels = [v for v in vessels if v.get("length_m", 0) > 80]
     dark_candidates = _estimate_dark_vessels(vessels, weather)
 
-    # AIS-dark vessels (biggest risk)
+                                     
     if dark_candidates > 0:
         pts = min(dark_candidates * 15, 40)
         total += pts
@@ -74,7 +74,7 @@ def calculate_risk(
             detail=f"{dark_candidates} vessel(s) with no AIS transponder signal detected",
         ))
 
-    # High traffic density
+                          
     if n_vessels > 50:
         pts = 10
         total += pts
@@ -94,7 +94,7 @@ def calculate_risk(
             detail=f"{n_vessels} vessels detected",
         ))
 
-    # Oversized / suspicious vessels
+                                    
     if large_vessels:
         pts = min(len(large_vessels) * 5, 15)
         total += pts
@@ -105,7 +105,7 @@ def calculate_risk(
             detail=f"{len(large_vessels)} vessel(s) >80m without confirmed identity",
         ))
 
-    # ── OIL SPILL ────────────────────────────────────────────────────────────
+                                                                               
     if oil_spill_area_m2 and oil_spill_area_m2 > 0:
         if oil_spill_area_m2 > 1_000_000:
             pts, sev = 35, "high"
@@ -122,7 +122,7 @@ def calculate_risk(
         total += pts
         factors.append(RiskFactor(name="Oil spill detected", score=pts, severity=sev, detail=detail))
 
-        # Wind drift multiplier
+                               
         wind_ms = weather.get("wind_ms", 0)
         if wind_ms > 10:
             pts = 10
@@ -143,7 +143,7 @@ def calculate_risk(
                 detail=f"Wind {wind_ms}m/s · estimated drift 1.2km/h",
             ))
 
-    # ── WEATHER CONDITIONS ────────────────────────────────────────────────────
+                                                                                
     beaufort = weather.get("wind_beaufort", 0)
     if beaufort >= 7:
         pts = 10
@@ -164,7 +164,7 @@ def calculate_risk(
             detail=f"Beaufort {beaufort} — elevated operational risk",
         ))
 
-    # Poor visibility
+                     
     vis = weather.get("visibility_km", 10)
     if vis < 1:
         pts = 12
@@ -185,7 +185,7 @@ def calculate_risk(
             detail=f"Visibility {vis}km — monitoring required",
         ))
 
-    # ── SAR MODE BONUS ────────────────────────────────────────────────────────
+                                                                                
     if mode == "sar" and weather.get("clouds_pct", 0) > 70:
         pts = 5
         total += pts
@@ -196,7 +196,7 @@ def calculate_risk(
             detail="Cloud cover >70% — SAR provides coverage impossible for optical sensors",
         ))
 
-    # ── SECURITY NEWS THREATS ─────────────────────────────────────────────────
+                                                                                
     if news:
         security_keywords = ['piracy', 'attack', 'hijack', 'terror', 'drone', 'missile', 'armed']
         has_threats = False
@@ -210,7 +210,7 @@ def calculate_risk(
         if has_threats:
             pts = 20
             total += pts
-            # Ensure we have a string representation
+                                                    
             threat_str = " | ".join(threat_titles[:2])
             factors.append(RiskFactor(
                 name="Security Incident Reported in Region",
@@ -219,7 +219,7 @@ def calculate_risk(
                 detail=f"Recent news indicates elevated security risk: {threat_str}",
             ))
 
-    # ── CLAMP & CLASSIFY ─────────────────────────────────────────────────────
+                                                                               
     total = min(total, 100)
 
     if total >= 75:
@@ -248,10 +248,10 @@ def calculate_risk(
         level, color = "LOW", "#1D9E75"
         actions = ["Continue routine monitoring"]
 
-    # Sort factors by score descending
+                                      
     factors.sort(key=lambda f: f.score, reverse=True)
 
-    # Build summary sentence
+                            
     parts = []
     if dark_candidates > 0:
         parts.append(f"{dark_candidates} AIS-dark vessel(s)")

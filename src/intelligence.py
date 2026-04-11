@@ -17,8 +17,6 @@ COPERNICUS_USER = os.getenv("COPERNICUS_USER", "")
 COPERNICUS_PASS = os.getenv("COPERNICUS_PASS", "")
 
 
-# ── WEATHER ──────────────────────────────────────────────────────────────────
-
 async def get_weather(lat: float, lon: float) -> dict:
     """Fetch current weather for coordinates."""
     if not WEATHER_API_KEY:
@@ -80,14 +78,12 @@ def _deg_to_compass(deg: float) -> str:
     return dirs[round(deg / 22.5) % 16]
 
 
-# ── NEWS ──────────────────────────────────────────────────────────────────────
-
 async def get_maritime_news(location_name: str = "") -> list[dict]:
     """Fetch recent maritime/environmental/security news."""
     if not NEWS_API_KEY:
         return _mock_news(location_name)
     try:
-        # Include keywords for piracy, terrorism, and security incidents
+                                                                        
         query = f"(maritime OR vessel OR shipping) AND (piracy OR attack OR security OR spill) {location_name}".strip()
         url = "https://newsapi.org/v2/everything"
         async with httpx.AsyncClient(timeout=8) as client:
@@ -95,9 +91,9 @@ async def get_maritime_news(location_name: str = "") -> list[dict]:
                 "q": query,
                 "apiKey": NEWS_API_KEY,
                 "language": "en",
-                "sortBy": "relevancy",  # Sort by relevancy instead of just date to get important security news
+                "sortBy": "relevancy",                                                                         
                 "pageSize": 6,
-                "from": (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d"), # Look back a week for major incidents
+                "from": (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d"),                                       
             })
             articles = r.json().get("articles", [])
             return [
@@ -122,8 +118,6 @@ def _mock_news(location_name: str = ""):
         {"title": "Satellite AI detects 47 illegal oil spills in Q1 2026", "source": "Reuters", "published": "2026-03-20", "url": "#"},
     ]
 
-
-# ── SENTINEL IMAGERY ──────────────────────────────────────────────────────────
 
 async def get_sentinel_image(lat: float, lon: float, mode: str = "optical") -> Optional[dict]:
     """
@@ -205,8 +199,6 @@ def _mock_sentinel_meta(lat, lon, mode):
         "mock": True,
     }
 
-
-# ── GATHER ALL INTEL ──────────────────────────────────────────────────────────
 
 async def gather_intelligence(lat: float, lon: float, mode: str = "optical") -> dict:
     """Run all intel fetches in parallel."""
