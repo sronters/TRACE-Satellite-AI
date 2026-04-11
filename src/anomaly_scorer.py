@@ -27,7 +27,6 @@ import numpy as np
 
                                                                              
 FEATURE_COLS = [
-    "MMSI",
     "LAT",
     "LON",
     "SOG",
@@ -74,12 +73,9 @@ class AnomalyScorer:
     def __init__(self, model_path: Union[str, Path, None] = None) -> None:
         try:
             from xgboost import XGBClassifier
-            from sklearn.impute import SimpleImputer
-            from sklearn.preprocessing import StandardScaler
         except ImportError as exc:
             raise ImportError(
-                "xgboost and scikit-learn are required. "
-                "Install with: pip install xgboost scikit-learn"
+                "xgboost is required. Install with: pip install xgboost"
             ) from exc
 
         if model_path is None:
@@ -91,25 +87,12 @@ class AnomalyScorer:
 
                             
         self._model = XGBClassifier()
-        self._model.load_model(str(model_path))
-
-                                                                   
-        self._imputer = SimpleImputer(strategy="median")
-        self._scaler = StandardScaler()
-
-                                                                     
+        self._model.load_model(str(model_path))                                                           
         self._sklearn_fitted = False
 
                                                                         
     def _preprocess(self, X: np.ndarray) -> np.ndarray:
-        """Impute NaN then scale."""
-        if not self._sklearn_fitted:
-            self._imputer.fit(X)
-            X_imp = self._imputer.transform(X)
-            self._scaler.fit(X_imp)
-            self._sklearn_fitted = True
-        X_imp = self._imputer.transform(X)
-        return self._scaler.transform(X_imp)
+        return X
 
                                                                         
     @staticmethod

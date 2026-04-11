@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRACE v2.0 — Tactical Reconnaissance & Analysis of Coastal Environments</title>
+<title>TRACE v2.0 вЂ” Tactical Reconnaissance & Analysis of Coastal Environments</title>
 <meta name="description" content="TRACE: AI-powered maritime intelligence platform with real-time vessel detection, oil spill monitoring, risk scoring, and tactical reports.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -40,7 +40,7 @@ body {
   font-size: 12px;
 }
 
-/* ── TOPBAR ── */
+/* в”Ђв”Ђ TOPBAR в”Ђв”Ђ */
 #topbar {
   height: 44px;
   display: flex;
@@ -82,10 +82,10 @@ body {
 .status-label { font-family: var(--mono); font-size: 9px; color: var(--green); letter-spacing: 1px; }
 #clock { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 1px; }
 
-/* ── LAYOUT ── */
+/* в”Ђв”Ђ LAYOUT в”Ђв”Ђ */
 #main { flex: 1; display: grid; grid-template-columns: 284px 1fr 308px; overflow: hidden; }
 
-/* ── SHARED PANEL STYLES ── */
+/* в”Ђв”Ђ SHARED PANEL STYLES в”Ђв”Ђ */
 .panel-left, .panel-right {
   background: var(--bg2);
   display: flex;
@@ -105,7 +105,7 @@ body {
   margin-bottom: 10px;
 }
 
-/* ── LEFT PANEL ── */
+/* в”Ђв”Ђ LEFT PANEL в”Ђв”Ђ */
 .coord-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 .field-label { font-family: var(--mono); font-size: 9px; color: var(--text3); margin-bottom: 4px; letter-spacing: 1px; }
 input[type=number], input[type=text] {
@@ -238,7 +238,7 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
 .al-sub { font-family: var(--mono); font-size: 9px; color: var(--text3); margin-top: 2px; line-height: 1.4; }
 .al-time { font-family: var(--mono); font-size: 9px; color: var(--text3); white-space: nowrap; margin-left: 4px; }
 
-/* ── INSPECTOR ── */
+/* в”Ђв”Ђ INSPECTOR в”Ђв”Ђ */
 #inspector-section { display: none; }
 .inspector-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .ins-back { color: var(--text3); font-size: 10px; cursor: pointer; }
@@ -253,14 +253,14 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
 .ins-btn { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); border-radius: 4px; padding: 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; text-align: center; margin-top: 4px; }
 .ins-btn:hover { background: var(--green); color: #000; }
 
-/* ── MAP ── */
+/* в”Ђв”Ђ MAP в”Ђв”Ђ */
 #map-wrap {
   position: relative;
   background: #07101c;
   overflow: hidden;
 }
 #map { height: 100%; width: 100%; }
-/* Tiles: no filter by default — satellite is real colour */
+/* Tiles: no filter by default вЂ” satellite is real colour */
 .leaflet-container { background: #07101c !important; }
 .leaflet-container.sar-mode .leaflet-tile { filter: invert(1) hue-rotate(180deg) saturate(0) brightness(0.6) contrast(1.2); }
 .leaflet-control-zoom a {
@@ -336,7 +336,7 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
 .badge-amber { background: #fffbeb; color: #92400e; }
 .badge-green { background: #f0fdf4; color: #166534; }
 
-/* ── RIGHT PANEL ── */
+/* в”Ђв”Ђ RIGHT PANEL в”Ђв”Ђ */
 /* Risk */
 #risk-section { padding: 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .risk-main { display: flex; align-items: center; gap: 14px; margin: 8px 0; }
@@ -427,7 +427,7 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-/* ── AIS ANOMALY ── */
+/* в”Ђв”Ђ AIS ANOMALY в”Ђв”Ђ */
 .an-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 6px; }
 .an-field { display: flex; flex-direction: column; }
 .an-label { font-family: var(--mono); font-size: 8px; color: var(--text3); margin-bottom: 2px; letter-spacing: 1px; }
@@ -446,11 +446,11 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
 </head>
 <body>
 
-<!-- TOPBAR -->
+
 <div id="topbar">
   <div style="display:flex;align-items:center;gap:12px;">
     <span class="logo-mark">TRACE</span>
-    <span class="logo-sub">TACTICAL RECONNAISSANCE &amp; ANALYSIS OF COASTAL ENVIRONMENTS · v2.0</span>
+    <span class="logo-sub">TACTICAL RECONNAISSANCE &amp; ANALYSIS OF COASTAL ENVIRONMENTS В· v2.0</span>
   </div>
   <div class="tabs">
     <button class="tab-btn active" id="tab-map" onclick="setTab('map')">MAP</button>
@@ -467,22 +467,22 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
   </div>
 </div>
 
-<!-- MAIN -->
+
 <div id="main">
 
-  <!-- LEFT PANEL -->
+  
   <div class="panel-left">
 
-    <!-- Coordinates + Controls -->
+    
     <div class="sec">
       <div class="sec-label">Target Coordinates</div>
       <div class="coord-grid">
         <div>
-          <div class="field-label">LATITUDE °N</div>
+          <div class="field-label">LATITUDE В°N</div>
           <input type="number" id="inp-lat" value="37.9456" step="0.0001" placeholder="37.9456">
         </div>
         <div>
-          <div class="field-label">LONGITUDE °E</div>
+          <div class="field-label">LONGITUDE В°E</div>
           <input type="number" id="inp-lon" value="23.6442" step="0.0001" placeholder="23.6442">
         </div>
       </div>
@@ -491,36 +491,36 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
         <button class="mode-btn" id="btn-sar" onclick="setMode('sar')">SAR RADAR</button>
         <button class="mode-btn" id="btn-dual" onclick="setMode('dual')">DUAL</button>
       </div>
-      <div class="sentinel-pill" id="sentinel-info">↓ Click map or enter coords to load Sentinel data</div>
-      <button class="scan-btn" id="scan-btn" onclick="initiateScan()">▶ INITIATE SCAN</button>
+      <div class="sentinel-pill" id="sentinel-info">в†“ Click map or enter coords to load Sentinel data</div>
+      <button class="scan-btn" id="scan-btn" onclick="initiateScan()">в–¶ INITIATE SCAN</button>
       <div class="upload-area" onclick="document.getElementById('file-input').click()">
         <input type="file" id="file-input" accept="image/*,.tif,.tiff" onchange="onFileSelect(event)">
-        <label class="upload-label" id="upload-label">📁 OR DROP IMAGE HERE</label>
+        <label class="upload-label" id="upload-label">рџ“Ѓ OR DROP IMAGE HERE</label>
       </div>
       
       <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
         <div class="sec-label" style="font-size:9px; margin-bottom:8px;">FLEET INTEGRATION</div>
         <input type="file" id="csv-upload" accept=".csv" style="display:none;" onchange="uploadFleetCSV(event)">
         <button class="mode-btn" style="width:100%; border:1px dashed var(--text3); color:var(--text3); padding:8px;" onclick="document.getElementById('csv-upload').click()">
-          📁 BATCH UPLOAD FLEET (CSV)
+          рџ“Ѓ BATCH UPLOAD FLEET (CSV)
         </button>
         <div id="csv-msg" style="color:var(--green); font-family:var(--mono); font-size:9px; margin-top:6px; text-align:center; display:none;"></div>
       </div>
     </div>
 
-    <!-- Intelligence Layer -->
+    
     <div class="sec">
       <div class="sec-label">Intelligence Layer</div>
       <div class="intel-grid">
         <div class="intel-card">
           <div class="ic-label">WEATHER</div>
-          <div class="ic-val blue" id="ic-weather">—</div>
-          <div class="ic-sub" id="ic-wind">—</div>
+          <div class="ic-val blue" id="ic-weather">вЂ”</div>
+          <div class="ic-sub" id="ic-wind">вЂ”</div>
         </div>
         <div class="intel-card">
           <div class="ic-label">VISIBILITY</div>
-          <div class="ic-val green" id="ic-vis">—</div>
-          <div class="ic-sub" id="ic-cloud">—</div>
+          <div class="ic-val green" id="ic-vis">вЂ”</div>
+          <div class="ic-sub" id="ic-cloud">вЂ”</div>
         </div>
         <div class="intel-card">
           <div class="ic-label">VESSELS</div>
@@ -535,34 +535,34 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
       </div>
     </div>
 
-    <!-- AIS Anomaly Check -->
+    
     <div class="sec" style="padding:10px 14px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
         <div class="sec-label" style="margin:0;">AIS ANOMALY CHECK</div>
-        <span style="font-family:var(--mono);font-size:8px;color:var(--blue);cursor:pointer;letter-spacing:1px;" onclick="anPrefill()">↙ PREFILL MAP</span>
+        <span style="font-family:var(--mono);font-size:8px;color:var(--blue);cursor:pointer;letter-spacing:1px;" onclick="anPrefill()">в†™ PREFILL MAP</span>
       </div>
       <div class="an-grid">
         <div class="an-field"><div class="an-label">MMSI</div><input class="an-input" type="number" id="an-mmsi" placeholder="367702220"></div>
         <div class="an-field"><div class="an-label">STATUS (0-15)</div><input class="an-input" type="number" id="an-status" placeholder="0" min="0" max="15"></div>
-        <div class="an-field"><div class="an-label">LAT °N</div><input class="an-input" type="number" id="an-lat" placeholder="29.7876" step="0.0001"></div>
-        <div class="an-field"><div class="an-label">LON °E</div><input class="an-input" type="number" id="an-lon" placeholder="-95.0807" step="0.0001"></div>
+        <div class="an-field"><div class="an-label">LAT В°N</div><input class="an-input" type="number" id="an-lat" placeholder="29.7876" step="0.0001"></div>
+        <div class="an-field"><div class="an-label">LON В°E</div><input class="an-input" type="number" id="an-lon" placeholder="-95.0807" step="0.0001"></div>
         <div class="an-field"><div class="an-label">SOG kn</div><input class="an-input" type="number" id="an-sog" placeholder="5.2" step="0.1" min="0"></div>
-        <div class="an-field"><div class="an-label">HEADING °</div><input class="an-input" type="number" id="an-head" placeholder="226" min="0" max="360"></div>
+        <div class="an-field"><div class="an-label">HEADING В°</div><input class="an-input" type="number" id="an-head" placeholder="226" min="0" max="360"></div>
       </div>
-      <div class="an-prev-toggle" id="an-prev-toggle" onclick="toggleAnPrev()">▸ PREVIOUS PING (optional)</div>
+      <div class="an-prev-toggle" id="an-prev-toggle" onclick="toggleAnPrev()">в–ё PREVIOUS PING (optional)</div>
       <div id="an-prev-fields">
         <div class="an-grid">
           <div class="an-field"><div class="an-label">PREV LAT</div><input class="an-input" type="number" id="an-plat" step="0.0001" placeholder="29.785"></div>
           <div class="an-field"><div class="an-label">PREV LON</div><input class="an-input" type="number" id="an-plon" step="0.0001" placeholder="-95.075"></div>
-          <div class="an-field"><div class="an-label">PREV HEAD °</div><input class="an-input" type="number" id="an-phead" placeholder="220"></div>
-          <div class="an-field"><div class="an-label">Δ TIME min</div><input class="an-input" type="number" id="an-dt" placeholder="5.0" step="0.1" min="0"></div>
+          <div class="an-field"><div class="an-label">PREV HEAD В°</div><input class="an-input" type="number" id="an-phead" placeholder="220"></div>
+          <div class="an-field"><div class="an-label">О” TIME min</div><input class="an-input" type="number" id="an-dt" placeholder="5.0" step="0.1" min="0"></div>
         </div>
       </div>
-      <button class="an-check-btn" id="an-btn" onclick="checkAnomaly()">◎ CHECK ANOMALY</button>
+      <button class="an-check-btn" id="an-btn" onclick="checkAnomaly()">в—Ћ CHECK ANOMALY</button>
       <div id="an-result"></div>
     </div>
 
-    <!-- Active Alerts -->
+    
     <div class="alerts-header">
       <div class="sec-label" style="margin:0">Active Alerts</div>
       <span class="alerts-count" id="alert-count"></span>
@@ -573,17 +573,17 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
       </div>
     </div>
 
-  </div><!-- /panel-left -->
+  </div>
 
-  <!-- MAP CENTER -->
+  
   <div id="map-wrap">
     <div id="map"></div>
     <div class="map-overlay" id="map-label">SATELLITE IMAGERY VIEWPORT</div>
     <div class="map-overlay" id="sentinel-badge">NO IMAGERY LOADED</div>
-    <div class="map-overlay" id="coord-badge">—</div>
+    <div class="map-overlay" id="coord-badge">вЂ”</div>
     <div class="map-overlay" id="map-stats">
       <span class="ms-pill" id="ms-vessels">0 VESSELS</span>
-      <span class="ms-pill" id="ms-conf">— CONF</span>
+      <span class="ms-pill" id="ms-conf">вЂ” CONF</span>
       <span class="ms-pill" id="ms-spill">NO SPILL</span>
       <span class="ms-pill" id="ms-mode">OPT</span>
     </div>
@@ -595,14 +595,14 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
+  
   <div class="panel-right">
 
-    <!-- Risk Assessment -->
+    
     <div id="risk-section">
       <div class="sec-label">Risk Assessment</div>
       <div class="risk-main">
-        <div id="risk-number">—</div>
+        <div id="risk-number">вЂ”</div>
         <div class="risk-right">
           <div class="risk-track"><div id="risk-bar"></div></div>
           <div id="risk-level" style="color:var(--text3)">AWAITING SCAN</div>
@@ -613,7 +613,7 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
       </div>
     </div>
 
-    <!-- Tactical Report -->
+    
     <div id="report-section">
       <div class="report-label">
         TACTICAL INTEL
@@ -622,14 +622,14 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
       <div id="report-text" class="placeholder">Awaiting scan...</div>
     </div>
 
-    <!-- Object Inspector -->
+    
     <div id="inspector-section">
       <div class="inspector-header">
-        <div class="sec-label" style="margin:0"><span style="color:var(--green)">●</span> OBJECT INSPECTOR</div>
-        <div class="ins-back" onclick="closeInspector()">✕ CLOSE</div>
+        <div class="sec-label" style="margin:0"><span style="color:var(--green)">в—Џ</span> OBJECT INSPECTOR</div>
+        <div class="ins-back" onclick="closeInspector()">вњ• CLOSE</div>
       </div>
       <table class="ins-table" id="ins-table">
-        <!-- populated by JS -->
+        
       </table>
       
       <div class="sec-label" style="font-size:9px; margin-top:15px;">ADD TO FLEET REGISTRY</div>
@@ -651,28 +651,27 @@ input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px r
           <input type="checkbox" id="ins-protection" style="width:auto;"> Escort / Protection Present
         </label>
 
-        <div class="ins-btn" onclick="saveToFleet()">✓ SAVE TO REGISTRY</div>
+        <div class="ins-btn" onclick="saveToFleet()">вњ“ SAVE TO REGISTRY</div>
       </div>
       <div id="ins-msg" style="color:var(--green); font-family:var(--mono); font-size:9px; margin-top:8px; display:none;">Saved to fleet!</div>
     </div>
 
-    <!-- Analysis History -->
+    
     <div id="history-section">
       <div class="sec-label">Analysis History</div>
       <div id="history-list"><div style="color:var(--text3);font-family:var(--mono);font-size:9px;">No history yet.</div></div>
     </div>
 
-    <!-- News Ticker -->
+    
     <div id="news-ticker">
       <span id="news-inner">LOADING INTELLIGENCE FEED...</span>
     </div>
 
-  </div><!-- /panel-right -->
+  </div>
 
-</div><!-- /main -->
+</div>
 
 <script>
-// ── STATE ─────────────────────────────────────────────────────────────────────
 let currentMode = 'optical';
 let currentFile = null;
 let scanTarget = { lat: 37.9456, lon: 23.6442 };
@@ -682,49 +681,41 @@ let map;
 let lastReport = null;
 
 let inspectorVessel = null;
-
-// ── CLOCK ─────────────────────────────────────────────────────────────────────
 function tick() {
   const n = new Date();
   const pad = x => String(x).padStart(2,'0');
   document.getElementById('clock').textContent =
-    `${n.getUTCFullYear()}-${pad(n.getUTCMonth()+1)}-${pad(n.getUTCDate())} · ${pad(n.getUTCHours())}:${pad(n.getUTCMinutes())}:${pad(n.getUTCSeconds())} UTC`;
+    `${n.getUTCFullYear()}-${pad(n.getUTCMonth()+1)}-${pad(n.getUTCDate())} В· ${pad(n.getUTCHours())}:${pad(n.getUTCMinutes())}:${pad(n.getUTCSeconds())} UTC`;
 }
 setInterval(tick, 1000); tick();
-
-// ── TILE LAYERS ──────────────────────────────────────────────────────────────
 const SH_INSTANCE = '13fa1b3a-8eca-4f42-b30b-20ca24d2ca35';
 const SH_BASE = `https://services.sentinel-hub.com/ogc/wms/${SH_INSTANCE}`;
 
 const TILES = {
-  // Real optical satellite from ESRI (always available, no auth)
   satellite: L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    { maxZoom: 19, attribution: '© ESRI World Imagery' }
+    { maxZoom: 19, attribution: 'В© ESRI World Imagery' }
   ),
-  // Sentinel-2 true colour via Sentinel Hub WMS (real optical satellite)
   sentinel2: L.tileLayer.wms(SH_BASE, {
     layers: 'TRUE-COLOR-S2L2A',
     format: 'image/jpeg',
     transparent: false,
     version: '1.3.0',
     maxZoom: 18,
-    attribution: '© ESA Sentinel-2 via Sentinel Hub',
+    attribution: 'В© ESA Sentinel-2 via Sentinel Hub',
     maxcc: 20,
   }),
-  // Sentinel-1 SAR — VV polarisation (real radar backscatter)
   sar_vv: L.tileLayer.wms(SH_BASE, {
     layers: 'SAR-URBAN',
     format: 'image/jpeg',
     transparent: false,
     version: '1.3.0',
     maxZoom: 18,
-    attribution: '© ESA Sentinel-1 GRD via Sentinel Hub',
+    attribution: 'В© ESA Sentinel-1 GRD via Sentinel Hub',
   }),
-  // Navigation fallback
   streets: L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    { maxZoom: 19, attribution: '© OpenStreetMap' }
+    { maxZoom: 19, attribution: 'В© OpenStreetMap' }
   ),
 };
 let activeLayer = 'satellite';
@@ -736,24 +727,19 @@ function setLayer(name) {
   document.querySelectorAll('.lt-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.layer === name)
   );
-  // SAR filter only for SAR layers
   document.getElementById('map').classList.toggle('sar-mode', name === 'sar_vv');
 }
-
-// ── MAP ───────────────────────────────────────────────────────────────────────
 function initMap() {
   map = L.map('map', { zoomControl: false, attributionControl: false }).setView([20, 0], 2);
   TILES.satellite.addTo(map);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-  // Layer toggle UI
   const layerDiv = document.createElement('div');
   layerDiv.id = 'layer-toggle';
   layerDiv.innerHTML = `
-    <button class="lt-btn active" data-layer="satellite" onclick="setLayer('satellite')">🛰 ESRI SAT</button>
-    <button class="lt-btn" data-layer="sentinel2" onclick="setLayer('sentinel2')">🌍 SENTINEL-2</button>
-    <button class="lt-btn" data-layer="sar_vv" onclick="setLayer('sar_vv')">📡 SAR RADAR</button>
-    <button class="lt-btn" data-layer="streets" onclick="setLayer('streets')">🗺 NAVIGATION</button>
+    <button class="lt-btn active" data-layer="satellite" onclick="setLayer('satellite')">рџ›° ESRI SAT</button>
+    <button class="lt-btn" data-layer="sentinel2" onclick="setLayer('sentinel2')">рџЊЌ SENTINEL-2</button>
+    <button class="lt-btn" data-layer="sar_vv" onclick="setLayer('sar_vv')">рџ“Ў SAR RADAR</button>
+    <button class="lt-btn" data-layer="streets" onclick="setLayer('streets')">рџ—є NAVIGATION</button>
   `;
   document.getElementById('map-wrap').appendChild(layerDiv);
 
@@ -762,51 +748,42 @@ function initMap() {
     scanTarget = { lat: +lat.toFixed(4), lon: +lng.toFixed(4) };
     document.getElementById('inp-lat').value = scanTarget.lat;
     document.getElementById('inp-lon').value = scanTarget.lon;
-    document.getElementById('coord-badge').textContent = `${scanTarget.lat}°N · ${scanTarget.lon}°E`;
+    document.getElementById('coord-badge').textContent = `${scanTarget.lat}В°N В· ${scanTarget.lon}В°E`;
     L.popup({ className: 'dark-popup' })
       .setLatLng(e.latlng)
-      .setContent(`<b style="font-family:monospace">${lat.toFixed(4)}°N ${lng.toFixed(4)}°E</b><br><small>Click INITIATE SCAN to analyze</small>`)
+      .setContent(`<b style="font-family:monospace">${lat.toFixed(4)}В°N ${lng.toFixed(4)}В°E</b><br><small>Click INITIATE SCAN to analyze</small>`)
       .openOn(map);
     loadIntel();
   });
 
   map.on('mousemove', e => {
     const { lat, lng } = e.latlng;
-    document.getElementById('coord-badge').textContent = `${lat.toFixed(4)}°N · ${lng.toFixed(4)}°E`;
+    document.getElementById('coord-badge').textContent = `${lat.toFixed(4)}В°N В· ${lng.toFixed(4)}В°E`;
   });
 }
-
-// ── MODE ──────────────────────────────────────────────────────────────────────
 function setMode(m) {
   currentMode = m;
   ['optical','sar','dual'].forEach(x =>
     document.getElementById('btn-'+x).classList.toggle('active', x === m)
   );
   document.getElementById('ms-mode').textContent = m.toUpperCase().slice(0,3);
-  // Apply SAR radar visual to map when SAR mode active
   document.getElementById('map').classList.toggle('sar-mode', m === 'sar');
   if (m === 'sar') {
-    document.getElementById('sentinel-info').textContent = '↓ SAR mode: Sentinel-1 GRD radar imagery';
+    document.getElementById('sentinel-info').textContent = 'в†“ SAR mode: Sentinel-1 GRD radar imagery';
   }
 }
-
-// ── TABS ──────────────────────────────────────────────────────────────────────
 function setTab(t) {
   ['map','history','analytics','export'].forEach(x =>
     document.getElementById('tab-'+x)?.classList.toggle('active', x === t)
   );
 }
-
-// ── FILE SELECT ───────────────────────────────────────────────────────────────
 function onFileSelect(e) {
   currentFile = e.target.files[0];
   if (currentFile) {
-    document.getElementById('upload-label').textContent = `📁 ${currentFile.name}`;
-    document.getElementById('sentinel-info').textContent = `↑ Ready: ${currentFile.name}`;
+    document.getElementById('upload-label').textContent = `рџ“Ѓ ${currentFile.name}`;
+    document.getElementById('sentinel-info').textContent = `в†‘ Ready: ${currentFile.name}`;
   }
 }
-
-// ── DRAG & DROP ───────────────────────────────────────────────────────────────
 const mapWrap = document.getElementById('map-wrap');
 mapWrap.addEventListener('dragover', e => { e.preventDefault(); document.getElementById('drop-zone').classList.add('visible'); });
 mapWrap.addEventListener('dragleave', () => document.getElementById('drop-zone').classList.remove('visible'));
@@ -816,12 +793,10 @@ mapWrap.addEventListener('drop', e => {
   const f = e.dataTransfer.files[0];
   if (f) {
     currentFile = f;
-    document.getElementById('upload-label').textContent = `📁 ${f.name}`;
-    document.getElementById('sentinel-info').textContent = `↑ Dropped: ${f.name}`;
+    document.getElementById('upload-label').textContent = `рџ“Ѓ ${f.name}`;
+    document.getElementById('sentinel-info').textContent = `в†‘ Dropped: ${f.name}`;
   }
 });
-
-// ── INTEL LOAD ────────────────────────────────────────────────────────────────
 async function loadIntel() {
   const lat = parseFloat(document.getElementById('inp-lat').value) || scanTarget.lat;
   const lon = parseFloat(document.getElementById('inp-lon').value) || scanTarget.lon;
@@ -833,9 +808,9 @@ async function loadIntel() {
       const s = d.sentinel;
       const mock = s.mock ? ' (mock)' : '';
       document.getElementById('sentinel-badge').textContent =
-        `${s.collection || 'Sentinel'} · ${s.resolution || '?'} · ${s.date || '?'}${mock}`;
+        `${s.collection || 'Sentinel'} В· ${s.resolution || '?'} В· ${s.date || '?'}${mock}`;
       document.getElementById('sentinel-info').textContent =
-        `↓ ${s.collection || 'Sentinel'} · ${s.date || '?'} · ${s.cloud_cover || '?'} cloud${mock}`;
+        `в†“ ${s.collection || 'Sentinel'} В· ${s.date || '?'} В· ${s.cloud_cover || '?'} cloud${mock}`;
     }
     updateNews(d.news || []);
   } catch(e) { console.warn('[TRACE] Intel fetch failed:', e); }
@@ -846,31 +821,29 @@ function updateIntelCards(intel) {
   if (w.condition) {
     const cond = w.condition.split(' ')[0];
     document.getElementById('ic-weather').textContent = w.wind_beaufort !== undefined ? `${w.wind_beaufort} Bft` : cond;
-    document.getElementById('ic-wind').textContent = `${w.wind_ms || '?'}m/s ${w.wind_dir || ''} · ${cond}`;
+    document.getElementById('ic-wind').textContent = `${w.wind_ms || '?'}m/s ${w.wind_dir || ''} В· ${cond}`;
     document.getElementById('ic-weather').className = 'ic-val ' + (w.wind_beaufort >= 7 ? 'red' : w.wind_beaufort >= 5 ? 'amber' : 'blue');
   }
   if (w.visibility_km !== undefined) {
     document.getElementById('ic-vis').textContent = w.visibility_km + 'km';
     document.getElementById('ic-vis').className = 'ic-val ' + (w.visibility_km < 3 ? 'red' : w.visibility_km < 6 ? 'amber' : 'green');
-    document.getElementById('ic-cloud').textContent = `Clouds ${w.clouds_pct ?? '?'}% · ${w.temp_c ?? '?'}°C`;
+    document.getElementById('ic-cloud').textContent = `Clouds ${w.clouds_pct ?? '?'}% В· ${w.temp_c ?? '?'}В°C`;
   }
 }
 
 function updateNews(news) {
   if (news.length) {
     document.getElementById('news-inner').textContent =
-      news.map(n => `${n.title} — ${n.source} [${n.published}]`).join('     ///     ');
+      news.map(n => `${n.title} вЂ” ${n.source} [${n.published}]`).join('     ///     ');
   }
 }
-
-// ── MAIN SCAN ─────────────────────────────────────────────────────────────────
 async function initiateScan() {
   const lat = parseFloat(document.getElementById('inp-lat').value) || scanTarget.lat;
   const lon = parseFloat(document.getElementById('inp-lon').value) || scanTarget.lon;
   scanTarget = { lat, lon };
 
   const btn = document.getElementById('scan-btn');
-  btn.disabled = true; btn.classList.add('scanning'); btn.textContent = '⟳ SCANNING...';
+  btn.disabled = true; btn.classList.add('scanning'); btn.textContent = 'вџі SCANNING...';
   clearMapMarkers();
   resetRisk();
 
@@ -881,10 +854,10 @@ async function initiateScan() {
   if (currentFile) fd.append('file', currentFile);
   else fd.append('use_sentinel', 'true');
 
-  setProgress(10, 'FETCHING INTELLIGENCE DATA...', 'weather · news · sentinel');
+  setProgress(10, 'FETCHING INTELLIGENCE DATA...', 'weather В· news В· sentinel');
   try {
     await sleep(300);
-    setProgress(30, 'INITIATING AI SCAN...', 'YOLO-OBB · U-Net SAR');
+    setProgress(30, 'INITIATING AI SCAN...', 'YOLO-OBB В· U-Net SAR');
     const r = await fetch('/process', { method: 'POST', body: fd });
     setProgress(70, 'CALCULATING RISK SCORE...', 'intelligence layer fusion');
     const d = await r.json();
@@ -901,11 +874,9 @@ async function initiateScan() {
     hideProgress();
   }
 
-  btn.disabled = false; btn.classList.remove('scanning'); btn.textContent = '▶ INITIATE SCAN';
+  btn.disabled = false; btn.classList.remove('scanning'); btn.textContent = 'в–¶ INITIATE SCAN';
   loadHistory();
 }
-
-// ── RENDER RESULTS ────────────────────────────────────────────────────────────
 function renderResults(data, lat, lon) {
   const { detections, risk, intel, qwen_report } = data;
 
@@ -920,35 +891,27 @@ function renderResults(data, lat, lon) {
   const darkCount = vessels.filter(v => v.length_m > 60 && v.confidence < 0.45).length;
   const avgConf = vessels.length
     ? (vessels.reduce((s,v)=>s+v.confidence,0)/vessels.length*100).toFixed(0)+'%'
-    : '—';
-
-  // Intel cards
+    : 'вЂ”';
   document.getElementById('ic-vessels').textContent = vessels.length;
   document.getElementById('ic-vessels').className = 'ic-val ' + (vessels.length > 30 ? 'amber' : 'green');
   document.getElementById('ic-dark').textContent = darkCount;
   document.getElementById('ic-dark').className = 'ic-val ' + (darkCount > 0 ? 'red' : 'green');
-
-  // Map stats
   document.getElementById('ms-vessels').textContent = vessels.length + ' VESSELS';
   document.getElementById('ms-conf').textContent = avgConf + ' CONF';
   const spill = detections?.oil_spill_area_m2 || 0;
   document.getElementById('ms-spill').textContent = spill > 0
-    ? (spill >= 1000 ? (spill/1000).toFixed(1)+'k m²' : spill.toFixed(0)+' m²')
+    ? (spill >= 1000 ? (spill/1000).toFixed(1)+'k mВІ' : spill.toFixed(0)+' mВІ')
     : 'NO SPILL';
-
-  // Sentinel badge
   if (intel?.sentinel) {
     const s = intel.sentinel;
     document.getElementById('sentinel-badge').textContent =
-      `${s.collection || 'Sentinel'} · ${s.resolution || '?'} · ${s.date || '?'}${s.mock ? ' (mock)' : ''}`;
+      `${s.collection || 'Sentinel'} В· ${s.resolution || '?'} В· ${s.date || '?'}${s.mock ? ' (mock)' : ''}`;
   }
-
-  // Image overlay — use exact bbox from server for alignment
   if (data.processed_image) {
-    const bb = data.image_bbox;  // [lat_min, lat_max, lon_min, lon_max]
+    const bb = data.image_bbox;
     let bounds;
     if (bb && bb.length === 4) {
-      bounds = [[bb[0], bb[2]], [bb[1], bb[3]]];  // [[lat_min, lon_min], [lat_max, lon_max]]
+      bounds = [[bb[0], bb[2]], [bb[1], bb[3]]];
     } else {
       const delta = 0.06;
       bounds = [[lat - delta, lon - delta * 1.5], [lat + delta, lon + delta * 1.5]];
@@ -963,13 +926,11 @@ function renderResults(data, lat, lon) {
       }
     ).addTo(map);
     map.fitBounds(bounds, { padding: [40, 40] });
-
-    // Add overlay toggle button
     const existingBtn = document.getElementById('overlay-toggle-btn');
     if (existingBtn) existingBtn.remove();
     const btn = document.createElement('button');
     btn.id = 'overlay-toggle-btn';
-    btn.textContent = '🖼 HIDE SCAN';
+    btn.textContent = 'рџ–ј HIDE SCAN';
     btn.style.cssText = `
       position:absolute; bottom:60px; left:50%; transform:translateX(-50%);
       z-index:1000; font-family:var(--mono); font-size:9px; letter-spacing:1px;
@@ -981,15 +942,13 @@ function renderResults(data, lat, lon) {
     btn.onclick = () => {
       overlayVisible = !overlayVisible;
       window._imgOverlay.setOpacity(overlayVisible ? 0.88 : 0);
-      btn.textContent = overlayVisible ? '🖼 HIDE SCAN' : '🖼 SHOW SCAN';
+      btn.textContent = overlayVisible ? 'рџ–ј HIDE SCAN' : 'рџ–ј SHOW SCAN';
       btn.style.borderColor = overlayVisible ? 'rgba(15,217,134,0.3)' : 'rgba(255,255,255,0.1)';
     };
     document.getElementById('map-wrap').appendChild(btn);
   } else {
     map.setView([lat, lon], 10);
   }
-
-  // Vessel markers
   vessels.forEach(v => {
     const gps = v.gps;
     if (!gps?.lat || !gps?.lon) return;
@@ -1002,7 +961,7 @@ function renderResults(data, lat, lon) {
       bubblingMouseEvents: false,
     });
     const badge = dark ? 'badge-red' : hasMatch ? 'badge-amber' : v.confidence > 0.6 ? 'badge-green' : 'badge-amber';
-    const status = dark ? '🔴 DARK' : hasMatch ? `🟣 ${v.fleet_match.name}` : '🟢 ACTIVE';
+    const status = dark ? 'рџ”ґ DARK' : hasMatch ? `рџџЈ ${v.fleet_match.name}` : 'рџџў ACTIVE';
     const matchRow = hasMatch
       ? `<div class="vp-row"><span class="vp-key">Fleet</span><span>${v.fleet_match.name} (${Math.round(v.fleet_match.match_confidence * 100)}%)</span></div>`
       : '';
@@ -1014,16 +973,12 @@ function renderResults(data, lat, lon) {
         <div class="vp-row"><span class="vp-key">Confidence</span><span>${(v.confidence*100).toFixed(0)}%</span></div>
         <div class="vp-row"><span class="vp-key">AIS</span><span class="vp-badge ${badge}">${status}</span></div>
         ${matchRow}
-        <div class="vp-row"><span class="vp-key">GPS</span><span>${gps.lat}°N ${gps.lon}°E</span></div>
+        <div class="vp-row"><span class="vp-key">GPS</span><span>${gps.lat}В°N ${gps.lon}В°E</span></div>
       </div>`);
-    
-    // Object Inspector click handler
     circle.on('click', () => openInspector(v));
 
     circle.addTo(map);
     vesselMarkers.push(circle);
-
-    // Draw route if origin or destination exists
     if (hasMatch && (v.fleet_match.origin || v.fleet_match.destination)) {
       (async () => {
         try {
@@ -1051,8 +1006,6 @@ function renderResults(data, lat, lon) {
       })();
     }
   });
-
-  // Risk panel
   if (risk) {
     document.getElementById('risk-number').textContent = risk.total;
     document.getElementById('risk-number').style.color = risk.level_color || '#f05252';
@@ -1072,22 +1025,14 @@ function renderResults(data, lat, lon) {
       }).join('');
     }
   }
-
-  // Report
   if (qwen_report) {
     const rt = document.getElementById('report-text');
     rt.className = '';
     rt.textContent = qwen_report;
   }
-
-  // Alerts
   if (risk?.factors) renderAlerts(risk.factors, lat, lon);
-
-  // News
   if (intel?.news?.length) updateNews(intel.news);
 }
-
-// ── ALERTS ────────────────────────────────────────────────────────────────────
 function renderAlerts(factors, lat, lon) {
   const list = document.getElementById('alerts-list');
   const items = factors.filter(f => f.severity !== 'low');
@@ -1101,7 +1046,7 @@ function renderAlerts(factors, lat, lon) {
     <div class="alert-item" onclick="focusAlert(${lat},${lon})">
       <div class="al-dot ${a.severity.toUpperCase()}"></div>
       <div class="al-body">
-        <div class="al-title">${a.name} · ${a.severity.toUpperCase()}</div>
+        <div class="al-title">${a.name} В· ${a.severity.toUpperCase()}</div>
         <div class="al-sub">${a.detail}</div>
       </div>
       <div class="al-time">now</div>
@@ -1111,8 +1056,6 @@ function renderAlerts(factors, lat, lon) {
 function focusAlert(lat, lon) {
   if (lat && lon) map.setView([lat, lon], 11);
 }
-
-// ── HISTORY ───────────────────────────────────────────────────────────────────
 async function loadHistory() {
   try {
     const r = await fetch('/api/history?limit=10');
@@ -1125,8 +1068,8 @@ async function loadHistory() {
     list.innerHTML = data.map(a => `
       <div class="hist-item" onclick="loadAnalysis(${a.id})">
         <div>
-          <div class="hist-loc">${(a.lat || 0).toFixed(2)}°N ${(a.lon || 0).toFixed(2)}°E</div>
-          <div class="hist-meta">${a.n_vessels} vessels · ${(a.mode||'').toUpperCase()} · ${(a.created_at||'').slice(0,16)} UTC</div>
+          <div class="hist-loc">${(a.lat || 0).toFixed(2)}В°N ${(a.lon || 0).toFixed(2)}В°E</div>
+          <div class="hist-meta">${a.n_vessels} vessels В· ${(a.mode||'').toUpperCase()} В· ${(a.created_at||'').slice(0,16)} UTC</div>
         </div>
         <span class="hist-risk hr-${a.risk_level}">${a.risk_score}</span>
       </div>`).join('');
@@ -1152,23 +1095,21 @@ async function loadAnalysis(id) {
     map.setView([d.lat, d.lon], 10);
   } catch(e) { console.warn('Load analysis failed:', e); }
 }
-
-// ── EXPORT ────────────────────────────────────────────────────────────────────
 function exportReport() {
   if (!lastReport) { alert('Run a scan first.'); return; }
   const { risk, intel, detections, qwen_report, timestamp } = lastReport;
   const w = intel?.weather || {};
   const s = intel?.sentinel || {};
   const lines = [
-    `TRACE v2.0 — TACTICAL INTELLIGENCE REPORT`,
+    `TRACE v2.0 вЂ” TACTICAL INTELLIGENCE REPORT`,
     `Generated: ${timestamp || new Date().toISOString()}`,
     ``,
-    `LOCATION: ${scanTarget.lat}°N ${scanTarget.lon}°E`,
-    `SATELLITE: ${s.collection || 'Unknown'} · ${s.date || '?'} · ${s.resolution || '?'}`,
+    `LOCATION: ${scanTarget.lat}В°N ${scanTarget.lon}В°E`,
+    `SATELLITE: ${s.collection || 'Unknown'} В· ${s.date || '?'} В· ${s.resolution || '?'}`,
     ``,
-    `WEATHER: ${w.condition || '?'} · Wind ${w.wind_ms || '?'}m/s ${w.wind_dir || ''} (Bft ${w.wind_beaufort || '?'}) · Vis ${w.visibility_km || '?'}km`,
+    `WEATHER: ${w.condition || '?'} В· Wind ${w.wind_ms || '?'}m/s ${w.wind_dir || ''} (Bft ${w.wind_beaufort || '?'}) В· Vis ${w.visibility_km || '?'}km`,
     ``,
-    `DETECTIONS: ${detections?.vessels?.length || 0} vessels · Oil spill: ${detections?.oil_spill_area_m2 || 0} m²`,
+    `DETECTIONS: ${detections?.vessels?.length || 0} vessels В· Oil spill: ${detections?.oil_spill_area_m2 || 0} mВІ`,
     `RISK SCORE: ${risk?.total || 0}/100 (${risk?.level || '?'})`,
     ``,
     `RISK FACTORS:`,
@@ -1178,7 +1119,7 @@ function exportReport() {
     ...(risk?.recommended_actions || []).map((a,i) => `  ${i+1}. ${a}`),
     ``,
     `QWEN 2.5-VL TACTICAL REPORT:`,
-    `─────────────────────────────`,
+    `в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ`,
     qwen_report || '(not available)',
   ];
   const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
@@ -1187,8 +1128,6 @@ function exportReport() {
   a.download = `TRACE_report_${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.txt`;
   a.click();
 }
-
-// ── HELPERS ───────────────────────────────────────────────────────────────────
 function clearMapMarkers() {
   vesselMarkers.forEach(m => m.remove());
   vesselMarkers = [];
@@ -1196,7 +1135,7 @@ function clearMapMarkers() {
 }
 
 function resetRisk() {
-  document.getElementById('risk-number').textContent = '—';
+  document.getElementById('risk-number').textContent = 'вЂ”';
   document.getElementById('risk-bar').style.width = '0%';
   document.getElementById('risk-level').textContent = 'SCANNING...';
 }
@@ -1213,8 +1152,6 @@ function hideProgress() {
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
 initMap();
 loadIntel();
 loadHistory();
@@ -1228,17 +1165,12 @@ fetch('/health').then(r => r.json()).then(d => {
   document.getElementById('sys-dot').style.background = 'var(--amber)';
   document.getElementById('sys-label').textContent = 'CONNECTING';
 });
-// ── OBJECT INSPECTOR ─────────────────────────────────────────────────────────
 function openInspector(vessel) {
   inspectorVessel = vessel;
   const gps = vessel.gps || {};
-  
-  // Hide Tactical Report, show Inspector
   document.getElementById('report-section').style.display = 'none';
   document.getElementById('inspector-section').style.display = 'block';
   document.getElementById('ins-msg').style.display = 'none';
-  
-  // Populate form
   const fm = vessel.fleet_match || {};
   document.getElementById('ins-name').value = fm.name || '';
   document.getElementById('ins-mmsi').value = fm.mmsi || '';
@@ -1248,8 +1180,6 @@ function openInspector(vessel) {
   document.getElementById('ins-cargo').value = fm.cargo || '';
   document.getElementById('ins-weight').value = fm.weight_tons || '';
   document.getElementById('ins-protection').checked = !!fm.has_protection;
-
-  // Build table
   const tbody = document.getElementById('ins-table');
   const dark = vessel.length_m > 60 && vessel.confidence < 0.45;
   const statusHtml = dark 
@@ -1261,7 +1191,7 @@ function openInspector(vessel) {
   let extraRows = '';
   if (fm.name) {
     if (fm.origin || fm.destination) {
-      extraRows += `<tr><td>Route</td><td style="color:var(--amber)">${fm.origin || '?'} → ${fm.destination || '?'}</td></tr>`;
+      extraRows += `<tr><td>Route</td><td style="color:var(--amber)">${fm.origin || '?'} в†’ ${fm.destination || '?'}</td></tr>`;
     }
     if (fm.cargo) {
       extraRows += `<tr><td>Cargo</td><td>${fm.cargo} ${fm.weight_tons ? `(${fm.weight_tons}t)` : ''}</td></tr>`;
@@ -1277,9 +1207,9 @@ function openInspector(vessel) {
     <tr><td>Confidence</td><td>${(vessel.confidence * 100).toFixed(1)}%</td></tr>
     <tr><td>Est. Length</td><td>${vessel.length_m} m</td></tr>
     <tr><td>Est. Width</td><td>${vessel.width_m} m</td></tr>
-    <tr><td>Est. Area</td><td>${vessel.area_m2} m²</td></tr>
-    <tr><td>Latitude</td><td>${gps.lat || 'N/A'}°N</td></tr>
-    <tr><td>Longitude</td><td>${gps.lon || 'N/A'}°E</td></tr>
+    <tr><td>Est. Area</td><td>${vessel.area_m2} mВІ</td></tr>
+    <tr><td>Latitude</td><td>${gps.lat || 'N/A'}В°N</td></tr>
+    <tr><td>Longitude</td><td>${gps.lon || 'N/A'}В°E</td></tr>
     ${extraRows}
   `;
 }
@@ -1289,15 +1219,11 @@ function closeInspector() {
   document.getElementById('report-section').style.display = 'block';
   inspectorVessel = null;
 }
-
-// Close inspector on ESC key
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && document.getElementById('inspector-section').style.display === 'block') {
     closeInspector();
   }
 });
-
-// Close inspector on Map click
 if (map) {
   map.on('click', () => {
     if (document.getElementById('inspector-section').style.display === 'block') {
@@ -1382,8 +1308,6 @@ async function uploadFleetCSV(e) {
     msgEl.textContent = `Error: ${err.message}`;
   }
 }
-
-// ── AIS ANOMALY ───────────────────────────────────────────────────────────────
 function anPrefill() {
   document.getElementById('an-lat').value = document.getElementById('inp-lat').value;
   document.getElementById('an-lon').value = document.getElementById('inp-lon').value;
@@ -1394,7 +1318,7 @@ function toggleAnPrev() {
   const t = document.getElementById('an-prev-toggle');
   const vis = f.style.display !== 'none' && f.style.display !== '';
   f.style.display = vis ? 'none' : 'block';
-  t.textContent = (vis ? '▸' : '▾') + ' PREVIOUS PING (optional)';
+  t.textContent = (vis ? 'в–ё' : 'в–ѕ') + ' PREVIOUS PING (optional)';
 }
 
 async function checkAnomaly() {
@@ -1406,11 +1330,11 @@ async function checkAnomaly() {
 
   if (isNaN(lat) || isNaN(lon) || isNaN(sog)) {
     res.style.display = 'flex'; res.className = 'anomaly';
-    res.innerHTML = '<span>⚠ Fill LAT, LON, SOG</span>'; return;
+    res.innerHTML = '<span>вљ  Fill LAT, LON, SOG</span>'; return;
   }
 
   btn.disabled = true;
-  btn.textContent = '… CHECKING';
+  btn.textContent = 'вЂ¦ CHECKING';
   res.style.display = 'none';
 
   const payload = {
@@ -1440,7 +1364,7 @@ async function checkAnomaly() {
     res.style.display = 'flex';
     res.className = d.is_anomaly ? 'anomaly' : 'normal';
     res.innerHTML = `
-      <span style="font-weight:700;">${d.is_anomaly ? '⚠ ANOMALY' : '✓ NORMAL'}</span>
+      <span style="font-weight:700;">${d.is_anomaly ? 'вљ  ANOMALY' : 'вњ“ NORMAL'}</span>
       <span style="font-size:12px;font-weight:700;">P: ${pct}%</span>
     `;
   } catch(e) {
@@ -1448,7 +1372,7 @@ async function checkAnomaly() {
     res.innerHTML = `<span>Error: ${e.message}</span>`;
   } finally {
     btn.disabled = false;
-    btn.textContent = '◎ CHECK ANOMALY';
+    btn.textContent = 'в—Ћ CHECK ANOMALY';
   }
 }
 

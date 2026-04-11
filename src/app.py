@@ -40,9 +40,10 @@ from fleet import init_fleet_tables, enrich_detections_with_fleet, get_nearby_po
 HF_TOKEN = os.getenv("HF_TOKEN", "")
 
                                                                                 
-YOLO_WEIGHTS = Path("models/best.pt")
-UNET_WEIGHTS = Path("models/best_unet_sos.pth")
-INDEX_HTML   = Path("src/index.html")
+_ROOT        = Path(__file__).parent.parent
+YOLO_WEIGHTS = _ROOT / "models" / "best.pt"
+UNET_WEIGHTS = _ROOT / "models" / "best_unet_sos.pth"
+INDEX_HTML   = Path(__file__).parent / "index.html"
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

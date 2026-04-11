@@ -307,15 +307,19 @@ def build_qwen_context(intel: dict, risk: RiskReport, detections: dict) -> str:
     oil_area = detections.get("oil_spill_area_m2", 0)
 
     fleet_info = []
+    fleet_routes = []
     for v in vessels:
         fm = v.get("fleet_match")
         if fm:
             route = f"{fm.get('origin', '?')} to {fm.get('destination', '?')}" if fm.get('destination') else "Unknown Dest"
             cargo = fm.get('cargo', 'Unknown Cargo')
             prot = "Protected" if fm.get('has_protection') else "Unescorted"
+            fleet_routes.append(route)
             fleet_info.append(f"  - {fm['name']} ({fm.get('vessel_type','Ship')}): Route [{route}] | Cargo [{cargo}] | Security [{prot}]")
 
     fleet_str = "\n".join(fleet_info) if fleet_info else "  No known fleet vessels detected."
+    route_hint = ", ".join(fleet_routes[:3]) if fleet_routes else "unknown"
+    route = route_hint
     news_str = "\n".join([f"  - {n['title']} ({n['source']})" for n in news[:3]]) or "  No recent news."
 
     context = f"""=== TRACE INTELLIGENCE CONTEXT ===

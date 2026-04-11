@@ -12,3 +12,4 @@ httpx
 opencv-python-headless
 segmentation-models-pytorch
 huggingface_hub
+
